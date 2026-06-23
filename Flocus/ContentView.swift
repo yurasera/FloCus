@@ -9,13 +9,21 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        HStack(spacing: 0) {
+            // Kiri: 3 bagian vertikal
+            VStack(spacing: 0) {
+                Color.red
+                Color.orange
+                Color.yellow
+            }
+
+            // Kanan: 2 bagian vertikal
+            VStack(spacing: 0) {
+                Color.green
+                Color.blue
+            }
         }
-        .padding()
+        .ignoresSafeArea()
     }
 }
 
