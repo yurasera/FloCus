@@ -13,21 +13,50 @@ struct LearnCard: View {
     let background: Color
     let foreground: Color
 
+    @State private var isCompleted = false
+
     var body: some View {
         VStack(alignment: .leading, spacing: Spacing.small) {
-            Text(title)
-                .font(.title3)
-                .fontWeight(.bold)
+
+            HStack {
+                Text(title)
+                    .font(.title3)
+                    .fontWeight(.bold)
+
+                Spacer()
+
+                if isCompleted {
+                    Image(systemName: "checkmark.circle.fill")
+                        .font(.title3)
+                }
+            }
 
             Text(description)
                 .font(.caption)
         }
-        .frame(maxWidth: .infinity, minHeight: Metrics.cardHeight, alignment: .leading)
+        .frame(
+            maxWidth: .infinity,
+            minHeight: Metrics.cardHeight,
+            alignment: .leading
+        )
         .padding()
         .background(
             RoundedRectangle(cornerRadius: Spacing.medium)
-                .fill(background)
+                .fill(
+                    isCompleted
+                    ? background.opacity(0.5)
+                    : background
+                )
         )
-        .foregroundStyle(foreground)
+        .foregroundStyle(
+            isCompleted
+            ? foreground
+            : foreground
+        )
+        .onTapGesture {
+            withAnimation(.spring) {
+                isCompleted.toggle()
+            }
+        }
     }
 }
