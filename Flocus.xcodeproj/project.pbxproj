@@ -6,7 +6,12 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		4D2DC3FC2FEB7C8D008239B7 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 4D2DC3FB2FEB7C8D008239B7 /* README.md */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
+		4D2DC3FB2FEB7C8D008239B7 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		4DA34FAB2FEAD0EA00ED3B16 /* Flocus.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Flocus.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -33,6 +38,7 @@
 			isa = PBXGroup;
 			children = (
 				4DA34FAD2FEAD0EA00ED3B16 /* Flocus */,
+				4D2DC3FB2FEB7C8D008239B7 /* README.md */,
 				4DA34FAC2FEAD0EA00ED3B16 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -109,6 +115,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4D2DC3FC2FEB7C8D008239B7 /* README.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
