@@ -16,6 +16,11 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		4D2DC4032FEB7F72008239B7 /* Screenshots */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Screenshots;
+			sourceTree = "<group>";
+		};
 		4DA34FAD2FEAD0EA00ED3B16 /* Flocus */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = Flocus;
@@ -39,6 +44,7 @@
 			children = (
 				4DA34FAD2FEAD0EA00ED3B16 /* Flocus */,
 				4D2DC3FB2FEB7C8D008239B7 /* README.md */,
+				4D2DC4032FEB7F72008239B7 /* Screenshots */,
 				4DA34FAC2FEAD0EA00ED3B16 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -67,6 +73,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
+				4D2DC4032FEB7F72008239B7 /* Screenshots */,
 				4DA34FAD2FEAD0EA00ED3B16 /* Flocus */,
 			);
 			name = Flocus;
