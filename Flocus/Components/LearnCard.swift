@@ -14,7 +14,7 @@ struct LearnCard: View {
     let foreground: Color
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: Spacing.small) {
             Text(title)
                 .font(.title3)
                 .fontWeight(.bold)
@@ -22,10 +22,10 @@ struct LearnCard: View {
             Text(description)
                 .font(.caption)
         }
-        .frame(maxWidth: .infinity, minHeight: 70, alignment: .leading)
+        .frame(maxWidth: .infinity, minHeight: Metrics.cardHeight, alignment: .leading)
         .padding()
         .background(
-            RoundedRectangle(cornerRadius: 16)
+            RoundedRectangle(cornerRadius: Spacing.medium)
                 .fill(background)
         )
         .foregroundStyle(foreground)

@@ -62,42 +62,10 @@ struct ContentView: View {
 
                 VStack {
                     Spacer()
-                    HStack(spacing: 16) {
-                        Image(systemName: "checkmark.circle.fill")
-                            .font(.title)
-                            .foregroundStyle(Color.brandPrimary)
-                            .background(
-                                    Circle()
-                                        .fill(Color.brandPrimary)
-                                )
-                            .overlay(
-                                Circle()
-                                    .stroke(Color.white, lineWidth: 2)
-                            )
-                        
-                        Image(systemName: "checkmark.circle.fill")
-                            .font(.title)
-                            .foregroundStyle(Color.brandSecondary)
-                            .background(
-                                    Circle()
-                                        .fill(Color.brandSecondary)
-                                )
-                            .overlay(
-                                Circle()
-                                    .stroke(Color.white, lineWidth: 2)
-                            )
-                        
-                        Image(systemName: "checkmark.circle.fill")
-                            .font(.title)
-                            .foregroundStyle(Color.brandTertiary)
-                            .background(
-                                    Circle()
-                                        .fill(Color.brandTertiary)
-                                )
-                            .overlay(
-                                Circle()
-                                    .stroke(Color.white, lineWidth: 2)
-                            )
+                    HStack(spacing: Spacing.medium) {
+                        StatusBadge(color: Color.brandPrimary)
+                        StatusBadge(color: Color.brandSecondary)
+                        StatusBadge(color: Color.brandTertiary)
                     }
                     Spacer()
                 }
@@ -109,7 +77,7 @@ struct ContentView: View {
             VStack(spacing: 0) {
                 VStack {
                     Spacer()
-                    VStack(alignment: .leading, spacing: 8) {
+                    VStack(alignment: .leading, spacing: Spacing.small) {
                         SectionHeader(title: "Impact", color: Color.brandTertiary, action: { print("Add tapped") })
 
                         LearnCard(
@@ -135,7 +103,7 @@ struct ContentView: View {
 
                 VStack {
                     Spacer()
-                    VStack(alignment: .leading, spacing: 8) {
+                    VStack(alignment: .leading, spacing: Spacing.small) {
                         SectionHeader(title: "Build", color: Color.brandSecondary, action: { print("Add tapped") })
 
                         LearnCard(
@@ -163,15 +131,6 @@ struct ContentView: View {
         }
         .ignoresSafeArea()
     }
-}
-
-enum Spacing {
-    static let small = 8.0
-    static let medium = 16.0
-}
-
-enum Metrics {
-    static let cardHeight = 70.0
 }
 
 #Preview {
