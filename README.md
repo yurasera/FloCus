@@ -10,6 +10,8 @@ The app is inspired by the idea that meaningful growth comes from balancing lear
 
 > Three words. Three roles. One journey.
 
+![Main Screenshot](Screenshots/Screenshot.png)
+
 ---
 
 ## Features
