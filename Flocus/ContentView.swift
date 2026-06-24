@@ -12,45 +12,32 @@ struct ContentView: View {
         HStack(spacing: 0) {
             // Kiri: 3 bagian vertikal
             VStack(spacing: 0) {
-                ZStack {
-                    Color.brandPrimary
-
-                    VStack(alignment: .leading, spacing: 8) {
+                VStack {
+                    Spacer()
+                    VStack(alignment: .leading, spacing: Spacing.small) {
                         Text("Flocus")
                             .font(.largeTitle)
                             .fontWeight(.bold)
 
                         Text("Three words.")
-                            .font(.title3)
-
+                            .font(.callout)
                         Text("Three roles.")
-                            .font(.title3)
+                            .font(.callout)
                         Text("One journey.")
-                            .font(.title3)
+                            .font(.callout)
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .foregroundColor(.white)
                     .padding()
+                    Spacer()
                 }
+                .frame(maxWidth: .infinity)
+                .background(Color.brandPrimary)
 
-                ZStack {
-                    Color.brandPrimary
-
-                    VStack(alignment: .leading, spacing: 8) {
-                        HStack(){
-                            Text("Learn")
-                                .font(.title)
-                                .fontWeight(.bold)
-                            
-                            Spacer()
-
-                            Button(action: {
-                                print("Add tapped")
-                            }) {
-                                Image(systemName: "plus.circle.fill")
-                                    .font(.title3)
-                            }
-                        }
+                VStack {
+                    Spacer()
+                    VStack(alignment: .leading, spacing: Spacing.small) {
+                        SectionHeader(title: "Learn", color: Color.brandTertiary, action: { print("Add tapped") })
 
                         LearnCard(
                             title: "Sketch",
@@ -69,11 +56,12 @@ struct ContentView: View {
                     .foregroundColor(.white)
                     .padding()
                 }
+                .frame(maxWidth: .infinity)
+                .background(Color.brandPrimary)
                 
 
-                ZStack {
-                    Color.brandPrimary
-
+                VStack {
+                    Spacer()
                     HStack(spacing: 16) {
                         Image(systemName: "checkmark.circle.fill")
                             .font(.title)
@@ -111,29 +99,18 @@ struct ContentView: View {
                                     .stroke(Color.white, lineWidth: 2)
                             )
                     }
+                    Spacer()
                 }
+                .frame(maxWidth: .infinity)
+                .background(Color.brandPrimary)
             }
 
             // Kanan: 2 bagian vertikal
             VStack(spacing: 0) {
-                ZStack {
-                    Color.brandSecondary
-
+                VStack {
+                    Spacer()
                     VStack(alignment: .leading, spacing: 8) {
-                        HStack(){
-                            Text("Impact")
-                                .font(.title)
-                                .fontWeight(.bold)
-                            
-                            Spacer()
-
-                            Button(action: {
-                                print("Add tapped")
-                            }) {
-                                Image(systemName: "plus.circle.fill")
-                                    .font(.title3)
-                            }
-                        }
+                        SectionHeader(title: "Impact", color: Color.brandTertiary, action: { print("Add tapped") })
 
                         LearnCard(
                             title: "Klinik",
@@ -151,28 +128,15 @@ struct ContentView: View {
                     }
                     .foregroundColor(.white)
                     .padding()
+                    Spacer()
                 }
+                .frame(maxWidth: .infinity)
+                .background(Color.brandSecondary)
 
-                ZStack {
-                    Color.brandTertiary
-
+                VStack {
+                    Spacer()
                     VStack(alignment: .leading, spacing: 8) {
-                        HStack(){
-                            Text("Build")
-                                .font(.title)
-                                .fontWeight(.bold)
-                                .foregroundStyle(Color.brandPrimary)
-                            
-                            Spacer()
-
-                            Button(action: {
-                                print("Add tapped")
-                            }) {
-                                Image(systemName: "plus.circle.fill")
-                                    .font(.title3)
-                                    .foregroundStyle(Color.brandPrimary)
-                            }
-                        }
+                        SectionHeader(title: "Build", color: Color.brandSecondary, action: { print("Add tapped") })
 
                         LearnCard(
                             title: "Flocus",
@@ -191,36 +155,23 @@ struct ContentView: View {
                     }
                     .foregroundColor(.white)
                     .padding()
+                    Spacer()
                 }
+                .frame(maxWidth: .infinity)
+                .background(Color.brandTertiary)
             }
         }
         .ignoresSafeArea()
     }
 }
 
-struct LearnCard: View {
-    let title: String
-    let description: String
-    let background: Color
-    let foreground: Color
+enum Spacing {
+    static let small = 8.0
+    static let medium = 16.0
+}
 
-    var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text(title)
-                .font(.title3)
-                .fontWeight(.bold)
-
-            Text(description)
-                .font(.caption)
-        }
-        .frame(maxWidth: .infinity, minHeight: 70, alignment: .leading)
-        .padding()
-        .background(
-            RoundedRectangle(cornerRadius: 16)
-                .fill(background)
-        )
-        .foregroundStyle(foreground)
-    }
+enum Metrics {
+    static let cardHeight = 70.0
 }
 
 #Preview {
