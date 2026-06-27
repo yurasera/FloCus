@@ -65,15 +65,15 @@ struct LearnSection: View {
                 SectionHeader(title: "Learn", color: Color.brandTertiary, action: headerAction)
 
                 LearnCard(
-                    title: "Sketch",
-                    description: "Belajar membuat design system.",
+                    title: "SwiftData",
+                    description: "Belajar penerapan SwiftData di Flocus.",
                     background: Color.brandTertiary,
                     foreground: Color.brandPrimary
                 )
                 
                 LearnCard(
-                    title: "Xcode",
-                    description: "Create new project.",
+                    title: "Prime App",
+                    description: "Create workout body understanding app using SwiftUI and SwiftData for project.",
                     background: Color.brandTertiary,
                     foreground: Color.brandPrimary
                 )
@@ -93,18 +93,18 @@ struct ImpactSection: View {
         VStack {
             Spacer()
             VStack(alignment: .leading, spacing: Spacing.small) {
-                SectionHeader(title: "Impact", color: Color.brandTertiary, action: headerAction)
+                SectionHeader(title: "Project", color: Color.brandTertiary, action: headerAction)
 
                 LearnCard(
-                    title: "Klinik",
-                    description: "Report Opname Data Obat Frontend and Backend.",
+                    title: "New Porto",
+                    description: "Create new repository using new tech stack.",
                     background: Color.brandTertiary,
                     foreground: Color.brandPrimary
                 )
                 
                 LearnCard(
-                    title: "Hospital",
-                    description: "Pengesahan pasien invoice hilangkan nomor tagihan.",
+                    title: "Klinik",
+                    description: "Deploy latest feature to dev server.",
                     background: Color.brandTertiary,
                     foreground: Color.brandPrimary
                 )
@@ -125,17 +125,23 @@ struct BuildSection: View {
         VStack {
             Spacer()
             VStack(alignment: .leading, spacing: Spacing.small) {
-                SectionHeader(title: "Build", color: Color.brandSecondary, action: headerAction)
+                SectionHeader(title: "Hobbies", color: Color.brandSecondary, action: headerAction)
 
                 LearnCard(
-                    title: "Flocus",
-                    description: "Focus app to help me focus in my task.",
+                    title: "Gizi",
+                    description: "Create prototype for a healthy app in figma.",
                     background: Color.brandSecondary,
                     foreground: Color.brandTertiary
                 )
+//                LearnCard(
+//                    title: "Git",
+//                    description: "Create git flow poster for learning.",
+//                    background: Color.brandSecondary,
+//                    foreground: Color.brandTertiary
+//                )
                 
                 LearnCard(
-                    title: "FloFeed",
+                    title: "Poster Platform",
                     description: "Need to get feedback from my course, so i can learn.",
                     background: Color.brandSecondary,
                     foreground: Color.brandTertiary
