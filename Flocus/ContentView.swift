@@ -95,18 +95,25 @@ struct ImpactSection: View {
             VStack(alignment: .leading, spacing: Spacing.small) {
                 SectionHeader(title: "Project", color: Color.brandTertiary, action: headerAction)
 
+//                LearnCard(
+//                    title: "New Porto",
+//                    description: "Create new repository using new tech stack.",
+//                    background: Color.brandTertiary,
+//                    foreground: Color.brandPrimary
+//                )
+                
                 LearnCard(
-                    title: "New Porto",
-                    description: "Create new repository using new tech stack.",
+                    title: "CV",
+                    description: "Update CV using new tech stack and ATS version.",
                     background: Color.brandTertiary,
-                    foreground: Color.brandPrimary
+                    foreground: Color.brandSecondary
                 )
                 
                 LearnCard(
                     title: "Klinik",
                     description: "Deploy latest feature to dev server.",
                     background: Color.brandTertiary,
-                    foreground: Color.brandPrimary
+                    foreground: Color.brandSecondary
                 )
             }
             .foregroundColor(.white)
@@ -141,8 +148,8 @@ struct BuildSection: View {
 //                )
                 
                 LearnCard(
-                    title: "Poster Platform",
-                    description: "Need to get feedback from my course, so i can learn.",
+                    title: "Record Video",
+                    description: "Find a way to record video Git and Github.",
                     background: Color.brandSecondary,
                     foreground: Color.brandTertiary
                 )
