@@ -15,6 +15,26 @@
 		4DA34FAB2FEAD0EA00ED3B16 /* Flocus.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Flocus.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		4D64E11C2FF3F0490073CE4B /* Exceptions for "Flocus" folder in "Flocus" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Docs/PRD.md,
+			);
+			target = 4DA34FAA2FEAD0EA00ED3B16 /* Flocus */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
+		4D64E11D2FF3F0490073CE4B /* Exceptions for "Flocus" folder in "Compile Sources" phase from "Flocus" target */ = {
+			isa = PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet;
+			buildPhase = 4DA34FA72FEAD0EA00ED3B16 /* Sources */;
+			membershipExceptions = (
+				Docs/PRD.md,
+			);
+		};
+/* End PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		4D2DC4032FEB7F72008239B7 /* Screenshots */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
@@ -23,6 +43,10 @@
 		};
 		4DA34FAD2FEAD0EA00ED3B16 /* Flocus */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				4D64E11C2FF3F0490073CE4B /* Exceptions for "Flocus" folder in "Flocus" target */,
+				4D64E11D2FF3F0490073CE4B /* Exceptions for "Flocus" folder in "Compile Sources" phase from "Flocus" target */,
+			);
 			path = Flocus;
 			sourceTree = "<group>";
 		};
