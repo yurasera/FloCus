@@ -15,52 +15,69 @@ struct ContentView: View {
         let learnTasks = tasks.filter { $0.category?.name == CategoryKind.learn.title }
         let projectTasks = tasks.filter { $0.category?.name == CategoryKind.projects.title }
         let hobbyTasks = tasks.filter { $0.category?.name == CategoryKind.hobbies.title }
-        HStack(spacing: 0) {
-            // Kiri: 3 bagian vertikal
-            VStack(spacing: 0) {
-                HeroSection(categories: categories)
-                CategorySection(category: .learn, tasks: learnTasks)
-                StatusSection()
+        VStack(spacing: 0) {
+            HStack(spacing: 0) {
+                // Kiri: 3 bagian vertikal
+                VStack(spacing: 0) {
+                    HeroSection(categories: categories)
+                    CategorySection(category: .learn, tasks: learnTasks)
+                    StatusSection()
+                }
+                
+                // Kanan: 2 bagian vertikal
+                VStack(spacing: 0) {
+                    CategorySection(category: .projects, tasks: projectTasks)
+                    CategorySection(category: .hobbies, tasks: hobbyTasks)
+                }
             }
-
-            // Kanan: 2 bagian vertikal
-            VStack(spacing: 0) {
-                CategorySection(category: .projects, tasks: projectTasks)
-                CategorySection(category: .hobbies, tasks: hobbyTasks)
+            HStack(spacing: 0) {
+                VStack(spacing: 0) {
+                    Button {
+                        // Set Priority action
+                    } label: {
+                        HStack {
+                            Image(systemName: "flag.fill")
+                            Text("Set Priority")
+                        }
+                        .font(.headline)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 14)
+                        .foregroundStyle(Color.brandTertiary)
+                        .clipShape(RoundedRectangle(cornerRadius: 24))
+                        .glassEffect()
+                    }
+                    Spacer()
+                }
+                .padding(16)
+                .background(Color.brandPrimary)
+                
+                VStack(spacing: 0) {
+                    Button {
+                        // Set Priority action
+                    } label: {
+                        HStack {
+                            Image(systemName: "timer")
+                            Text("Start Focus")
+                        }
+                        .font(.headline)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 14)
+                        .foregroundStyle(Color.brandSecondary)
+                        .clipShape(RoundedRectangle(cornerRadius: 24))
+                        .glassEffect()
+                    }
+                    Spacer()
+                }
+                .padding(16)
+                .background(Color.brandTertiary)
             }
+            .frame(height: 96)
         }
         .ignoresSafeArea()
     }
 }
 
 // MARK: - Sections
-
-struct HeroSection: View {
-    let categories: [Category]
-    var body: some View {
-        VStack {
-            Spacer()
-            VStack(alignment: .leading, spacing: Spacing.small) {
-                Text("Flocus")
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
-
-                Text("Three words.")
-                    .font(.callout)
-                Text("Three roles.")
-                    .font(.callout)
-                Text("One journey.")
-                    .font(.callout)
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .foregroundColor(.white)
-            .padding()
-            Spacer()
-        }
-        .frame(maxWidth: .infinity)
-        .background(Color.brandPrimary)
-    }
-}
 
 struct StatusSection: View {
     var body: some View {
