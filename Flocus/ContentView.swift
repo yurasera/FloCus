@@ -12,19 +12,20 @@ struct ContentView: View {
     @Environment(\.modelContext)
     private var context
     @Query private var categories: [Category]
+    @Query private var tasks: [Task]
     var body: some View {
         HStack(spacing: 0) {
             // Kiri: 3 bagian vertikal
             VStack(spacing: 0) {
                 HeroSection(categories: categories)
-                CategorySection(category: .learn)
+                CategorySection(category: .learn, tasks: tasks)
                 StatusSection()
             }
 
             // Kanan: 2 bagian vertikal
             VStack(spacing: 0) {
-                CategorySection(category: .projects)
-                CategorySection(category: .hobbies)
+                CategorySection(category: .projects, tasks: tasks)
+                CategorySection(category: .hobbies, tasks: tasks)
             }
         }
         .ignoresSafeArea()
@@ -117,50 +118,15 @@ enum CategoryKind {
         }
     }
 
-    // Cards to display for each category. Reuse existing sample content.
+    // Cards to display for each category from model tasks.
     @ViewBuilder
-    var cards: some View {
-        switch self {
-        case .learn:
+    func cards(for tasks: [Task]) -> some View {
+        ForEach(tasks) { task in
             LearnCard(
-                title: "SwiftData",
-                description: "Belajar penerapan SwiftData di Flocus.",
-                background: Color.brandTertiary,
-                foreground: Color.brandPrimary
-            )
-            LearnCard(
-                title: "Prime App",
-                description: "Create workout body understanding app using SwiftUI and SwiftData for project.",
-                background: Color.brandTertiary,
-                foreground: Color.brandPrimary
-            )
-
-        case .projects:
-            LearnCard(
-                title: "CV",
-                description: "Update CV using new tech stack and ATS version.",
-                background: Color.brandTertiary,
-                foreground: Color.brandSecondary
-            )
-            LearnCard(
-                title: "Klinik",
-                description: "Deploy latest feature to dev server.",
-                background: Color.brandTertiary,
-                foreground: Color.brandSecondary
-            )
-
-        case .hobbies:
-            LearnCard(
-                title: "Gizi",
-                description: "Create prototype for a healthy app in figma.",
-                background: Color.brandSecondary,
-                foreground: Color.brandTertiary
-            )
-            LearnCard(
-                title: "Record Video",
-                description: "Find a way to record video Git and Github.",
-                background: Color.brandSecondary,
-                foreground: Color.brandTertiary
+                title: task.title,
+                description: task.notes,
+                background: headerColor,
+                foreground: backgroundColor
             )
         }
     }
@@ -168,6 +134,7 @@ enum CategoryKind {
 
 struct CategorySection: View {
     let category: CategoryKind
+    let tasks: [Task]
     private var headerAction: () -> Void { { print("Add tapped") } }
 
     var body: some View {
@@ -175,7 +142,7 @@ struct CategorySection: View {
             Spacer()
             VStack(alignment: .leading, spacing: Spacing.small) {
                 SectionHeader(title: category.title, color: category.headerColor, action: headerAction)
-                category.cards
+                category.cards(for: tasks)
             }
             .foregroundColor(.white)
             .padding()

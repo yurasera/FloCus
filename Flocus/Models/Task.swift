@@ -13,17 +13,21 @@ final class Task {
 
     var title: String
     var notes: String
-    var category: Category?
     var status: TaskStatus
     var createdAt: Date
     var completedAt: Date?
+    
+    @Relationship(inverse: \Category.tasks)
+    var category: Category?
 
     init(
         title: String,
-        notes: String
+        notes: String,
+        category: Category?
     ) {
         self.title = title
         self.notes = notes
+        self.category = category
         self.status = .backlog
         self.createdAt = .now
         self.completedAt = nil
