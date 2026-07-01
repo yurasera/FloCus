@@ -17,14 +17,14 @@ struct ContentView: View {
             // Kiri: 3 bagian vertikal
             VStack(spacing: 0) {
                 HeroSection(categories: categories)
-                LearnSection()
+                CategorySection(category: .learn)
                 StatusSection()
             }
 
             // Kanan: 2 bagian vertikal
             VStack(spacing: 0) {
-                ImpactSection()
-                BuildSection()
+                CategorySection(category: .projects)
+                CategorySection(category: .hobbies)
             }
         }
         .ignoresSafeArea()
@@ -68,115 +68,6 @@ struct HeroSection: View {
     }
 }
 
-struct LearnSection: View {
-    private var headerAction: () -> Void { { print("Add tapped") } }
-
-    var body: some View {
-        VStack {
-            Spacer()
-            VStack(alignment: .leading, spacing: Spacing.small) {
-                SectionHeader(title: "Learn", color: Color.brandTertiary, action: headerAction)
-
-                LearnCard(
-                    title: "SwiftData",
-                    description: "Belajar penerapan SwiftData di Flocus.",
-                    background: Color.brandTertiary,
-                    foreground: Color.brandPrimary
-                )
-                
-                LearnCard(
-                    title: "Prime App",
-                    description: "Create workout body understanding app using SwiftUI and SwiftData for project.",
-                    background: Color.brandTertiary,
-                    foreground: Color.brandPrimary
-                )
-            }
-            .foregroundColor(.white)
-            .padding()
-        }
-        .frame(maxWidth: .infinity)
-        .background(Color.brandPrimary)
-    }
-}
-
-struct ImpactSection: View {
-    private var headerAction: () -> Void { { print("Add tapped") } }
-
-    var body: some View {
-        VStack {
-            Spacer()
-            VStack(alignment: .leading, spacing: Spacing.small) {
-                SectionHeader(title: "Project", color: Color.brandTertiary, action: headerAction)
-
-//                LearnCard(
-//                    title: "New Porto",
-//                    description: "Create new repository using new tech stack.",
-//                    background: Color.brandTertiary,
-//                    foreground: Color.brandPrimary
-//                )
-                
-                LearnCard(
-                    title: "CV",
-                    description: "Update CV using new tech stack and ATS version.",
-                    background: Color.brandTertiary,
-                    foreground: Color.brandSecondary
-                )
-                
-                LearnCard(
-                    title: "Klinik",
-                    description: "Deploy latest feature to dev server.",
-                    background: Color.brandTertiary,
-                    foreground: Color.brandSecondary
-                )
-            }
-            .foregroundColor(.white)
-            .padding()
-            Spacer()
-        }
-        .frame(maxWidth: .infinity)
-        .background(Color.brandSecondary)
-    }
-}
-
-struct BuildSection: View {
-    private var headerAction: () -> Void { { print("Add tapped") } }
-
-    var body: some View {
-        VStack {
-            Spacer()
-            VStack(alignment: .leading, spacing: Spacing.small) {
-                SectionHeader(title: "Hobbies", color: Color.brandSecondary, action: headerAction)
-
-                LearnCard(
-                    title: "Gizi",
-                    description: "Create prototype for a healthy app in figma.",
-                    background: Color.brandSecondary,
-                    foreground: Color.brandTertiary
-                )
-//                LearnCard(
-//                    title: "Git",
-//                    description: "Create git flow poster for learning.",
-//                    background: Color.brandSecondary,
-//                    foreground: Color.brandTertiary
-//                )
-                
-                LearnCard(
-                    title: "Record Video",
-                    description: "Find a way to record video Git and Github.",
-                    background: Color.brandSecondary,
-                    foreground: Color.brandTertiary
-                )
-                
-            }
-            .foregroundColor(.white)
-            .padding()
-            Spacer()
-        }
-        .frame(maxWidth: .infinity)
-        .background(Color.brandTertiary)
-    }
-}
-
 struct StatusSection: View {
     var body: some View {
         VStack {
@@ -190,6 +81,108 @@ struct StatusSection: View {
         }
         .frame(maxWidth: .infinity)
         .background(Color.brandPrimary)
+    }
+}
+
+// MARK: - Generic Category Section
+
+enum CategoryKind {
+    case learn
+    case projects
+    case hobbies
+
+    var title: String {
+        switch self {
+        case .learn: return "Learn"
+        case .projects: return "Project"
+        case .hobbies: return "Hobbies"
+        }
+    }
+
+    // Header title color for SectionHeader
+    var headerColor: Color {
+        switch self {
+        case .learn: return Color.brandTertiary
+        case .projects: return Color.brandTertiary
+        case .hobbies: return Color.brandSecondary
+        }
+    }
+
+    // Background color of the section container
+    var backgroundColor: Color {
+        switch self {
+        case .learn: return Color.brandPrimary
+        case .projects: return Color.brandSecondary
+        case .hobbies: return Color.brandTertiary
+        }
+    }
+
+    // Cards to display for each category. Reuse existing sample content.
+    @ViewBuilder
+    var cards: some View {
+        switch self {
+        case .learn:
+            LearnCard(
+                title: "SwiftData",
+                description: "Belajar penerapan SwiftData di Flocus.",
+                background: Color.brandTertiary,
+                foreground: Color.brandPrimary
+            )
+            LearnCard(
+                title: "Prime App",
+                description: "Create workout body understanding app using SwiftUI and SwiftData for project.",
+                background: Color.brandTertiary,
+                foreground: Color.brandPrimary
+            )
+
+        case .projects:
+            LearnCard(
+                title: "CV",
+                description: "Update CV using new tech stack and ATS version.",
+                background: Color.brandTertiary,
+                foreground: Color.brandSecondary
+            )
+            LearnCard(
+                title: "Klinik",
+                description: "Deploy latest feature to dev server.",
+                background: Color.brandTertiary,
+                foreground: Color.brandSecondary
+            )
+
+        case .hobbies:
+            LearnCard(
+                title: "Gizi",
+                description: "Create prototype for a healthy app in figma.",
+                background: Color.brandSecondary,
+                foreground: Color.brandTertiary
+            )
+            LearnCard(
+                title: "Record Video",
+                description: "Find a way to record video Git and Github.",
+                background: Color.brandSecondary,
+                foreground: Color.brandTertiary
+            )
+        }
+    }
+}
+
+struct CategorySection: View {
+    let category: CategoryKind
+    private var headerAction: () -> Void { { print("Add tapped") } }
+
+    var body: some View {
+        VStack {
+            Spacer()
+            VStack(alignment: .leading, spacing: Spacing.small) {
+                SectionHeader(title: category.title, color: category.headerColor, action: headerAction)
+                category.cards
+            }
+            .foregroundColor(.white)
+            .padding()
+            Spacer()
+        }
+        .frame(maxWidth: .infinity)
+        .background(category.backgroundColor)
     }
 }
 
