@@ -121,13 +121,30 @@ enum CategoryKind {
     // Cards to display for each category from model tasks.
     @ViewBuilder
     func cards(for tasks: [Task]) -> some View {
-        ForEach(tasks) { task in
+        let limited = Array(tasks.prefix(2))
+        if limited.isEmpty {
+            // Show two empty placeholder cards when there is no data
             LearnCard(
-                title: task.title,
-                description: task.notes,
+                title: "",
+                description: "",
                 background: headerColor,
                 foreground: backgroundColor
             )
+            LearnCard(
+                title: "",
+                description: "",
+                background: headerColor,
+                foreground: backgroundColor
+            )
+        } else {
+            ForEach(limited) { task in
+                LearnCard(
+                    title: task.title,
+                    description: task.notes,
+                    background: headerColor,
+                    foreground: backgroundColor
+                )
+            }
         }
     }
 }
@@ -156,3 +173,4 @@ struct CategorySection: View {
 #Preview {
     ContentView()
 }
+
