@@ -14,18 +14,21 @@ struct ContentView: View {
     @Query private var categories: [Category]
     @Query private var tasks: [Task]
     var body: some View {
+        let learnTasks = tasks.filter { $0.category?.name == "Learn" }
+        let projectTasks = tasks.filter { $0.category?.name == "Projects" }
+        let hobbyTasks = tasks.filter { $0.category?.name == "Hobbies" }
         HStack(spacing: 0) {
             // Kiri: 3 bagian vertikal
             VStack(spacing: 0) {
                 HeroSection(categories: categories)
-                CategorySection(category: .learn, tasks: tasks)
+                CategorySection(category: .learn, tasks: learnTasks)
                 StatusSection()
             }
 
             // Kanan: 2 bagian vertikal
             VStack(spacing: 0) {
-                CategorySection(category: .projects, tasks: tasks)
-                CategorySection(category: .hobbies, tasks: tasks)
+                CategorySection(category: .projects, tasks: projectTasks)
+                CategorySection(category: .hobbies, tasks: hobbyTasks)
             }
         }
         .ignoresSafeArea()
@@ -57,7 +60,6 @@ struct HeroSection: View {
                     .font(.callout)
                 Text("One journey.")
                     .font(.callout)
-                Text("Categories: \(categories.count)")
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .foregroundColor(.white)
@@ -208,7 +210,7 @@ private struct AddTaskSheet: View {
         let categoryName: String
         switch category {
         case .learn: categoryName = "Learn"
-        case .projects: categoryName = "Project"
+        case .projects: categoryName = "Projects"
         case .hobbies: categoryName = "Hobbies"
         }
 
