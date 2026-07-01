@@ -152,7 +152,8 @@ enum CategoryKind {
 struct CategorySection: View {
     let category: CategoryKind
     let tasks: [Task]
-    private var headerAction: () -> Void { { print("Add tapped") } }
+    @State private var isPresentingAddTask = false
+    private var headerAction: () -> Void { { isPresentingAddTask = true } }
 
     var body: some View {
         VStack {
@@ -167,6 +168,46 @@ struct CategorySection: View {
         }
         .frame(maxWidth: .infinity)
         .background(category.backgroundColor)
+        .sheet(isPresented: $isPresentingAddTask) { AddTaskSheet(category: category) }
+    }
+}
+
+private struct AddTaskSheet: View {
+    @Environment(\.dismiss) private var dismiss
+    @Environment(\.modelContext) private var modelContext
+
+    let category: CategoryKind
+    @State private var title: String = ""
+    @State private var notes: String = ""
+
+    var body: some View {
+        NavigationStack {
+            Form {
+                Section("Title") {
+                    TextField("Enter title", text: $title)
+                }
+                Section("Notes") {
+                    TextField("Enter notes", text: $notes, axis: .vertical)
+                        .lineLimit(3, reservesSpace: true)
+                }
+            }
+            .navigationTitle("Add \(category.title) Task")
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel") { dismiss() }
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Save") { save() }
+                        .disabled(title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                }
+            }
+        }
+    }
+
+    private func save() {
+        let newTask = Task(title: title, notes: notes, category: nil)
+        modelContext.insert(newTask)
+        dismiss()
     }
 }
 
