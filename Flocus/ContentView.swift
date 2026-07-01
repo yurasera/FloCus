@@ -205,7 +205,18 @@ private struct AddTaskSheet: View {
     }
 
     private func save() {
-        let newTask = Task(title: title, notes: notes, category: nil)
+        let categoryName: String
+        switch category {
+        case .learn: categoryName = "Learn"
+        case .projects: categoryName = "Project"
+        case .hobbies: categoryName = "Hobbies"
+        }
+
+        // Fetch Category seeded by SeedData matching the name
+        let descriptor = FetchDescriptor<Category>(predicate: #Predicate { $0.name == categoryName })
+        let matchedCategory = try? modelContext.fetch(descriptor).first
+
+        let newTask = Task(title: title, notes: notes, category: matchedCategory)
         modelContext.insert(newTask)
         dismiss()
     }
@@ -214,4 +225,3 @@ private struct AddTaskSheet: View {
 #Preview {
     ContentView()
 }
-
