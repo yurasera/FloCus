@@ -14,9 +14,9 @@ struct ContentView: View {
     @Query private var categories: [Category]
     @Query private var tasks: [Task]
     var body: some View {
-        let learnTasks = tasks.filter { $0.category?.name == "Learn" }
-        let projectTasks = tasks.filter { $0.category?.name == "Projects" }
-        let hobbyTasks = tasks.filter { $0.category?.name == "Hobbies" }
+        let learnTasks = tasks.filter { $0.category?.name == CategoryKind.learn.title }
+        let projectTasks = tasks.filter { $0.category?.name == CategoryKind.projects.title }
+        let hobbyTasks = tasks.filter { $0.category?.name == CategoryKind.hobbies.title }
         HStack(spacing: 0) {
             // Kiri: 3 bagian vertikal
             VStack(spacing: 0) {
