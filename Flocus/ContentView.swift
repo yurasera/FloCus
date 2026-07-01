@@ -6,13 +6,17 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct ContentView: View {
+    @Environment(\.modelContext)
+    private var context
+    @Query private var categories: [Category]
     var body: some View {
         HStack(spacing: 0) {
             // Kiri: 3 bagian vertikal
             VStack(spacing: 0) {
-                HeroSection()
+                HeroSection(categories: categories)
                 LearnSection()
                 StatusSection()
             }
@@ -24,12 +28,20 @@ struct ContentView: View {
             }
         }
         .ignoresSafeArea()
+        .task {
+            do {
+                try SeedData.seedCategories(in: context)
+            } catch {
+                print("Seed failed:", error)
+            }
+        }
     }
 }
 
 // MARK: - Sections
 
 struct HeroSection: View {
+    let categories: [Category]
     var body: some View {
         VStack {
             Spacer()
@@ -44,6 +56,7 @@ struct HeroSection: View {
                     .font(.callout)
                 Text("One journey.")
                     .font(.callout)
+                Text("Categories: \(categories.count)")
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .foregroundColor(.white)
