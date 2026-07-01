@@ -9,8 +9,6 @@ import SwiftUI
 import SwiftData
 
 struct ContentView: View {
-    @Environment(\.modelContext)
-    private var context
     @Query private var categories: [Category]
     @Query private var tasks: [Task]
     var body: some View {
@@ -32,13 +30,6 @@ struct ContentView: View {
             }
         }
         .ignoresSafeArea()
-        .task {
-            do {
-                try SeedData.seedCategories(in: context)
-            } catch {
-                print("Seed failed:", error)
-            }
-        }
     }
 }
 
@@ -97,7 +88,7 @@ enum CategoryKind {
     var title: String {
         switch self {
         case .learn: return "Learn"
-        case .projects: return "Project"
+        case .projects: return "Projects"
         case .hobbies: return "Hobbies"
         }
     }
