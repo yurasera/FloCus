@@ -16,21 +16,21 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		4D64E11C2FF3F0490073CE4B /* Exceptions for "Flocus" folder in "Flocus" target */ = {
+		4D64E12E2FF4C2410073CE4B /* Exceptions for "Docs" folder in "Flocus" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				Docs/PRD.md,
+				PRD.md,
 			);
 			target = 4DA34FAA2FEAD0EA00ED3B16 /* Flocus */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
-		4D64E11D2FF3F0490073CE4B /* Exceptions for "Flocus" folder in "Compile Sources" phase from "Flocus" target */ = {
+		4D64E12F2FF4C2410073CE4B /* Exceptions for "Docs" folder in "Compile Sources" phase from "Flocus" target */ = {
 			isa = PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet;
 			buildPhase = 4DA34FA72FEAD0EA00ED3B16 /* Sources */;
 			membershipExceptions = (
-				Docs/PRD.md,
+				PRD.md,
 			);
 		};
 /* End PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
@@ -41,12 +41,17 @@
 			path = Screenshots;
 			sourceTree = "<group>";
 		};
-		4DA34FAD2FEAD0EA00ED3B16 /* Flocus */ = {
+		4D64E12C2FF4C2400073CE4B /* Docs */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				4D64E11C2FF3F0490073CE4B /* Exceptions for "Flocus" folder in "Flocus" target */,
-				4D64E11D2FF3F0490073CE4B /* Exceptions for "Flocus" folder in "Compile Sources" phase from "Flocus" target */,
+				4D64E12E2FF4C2410073CE4B /* Exceptions for "Docs" folder in "Flocus" target */,
+				4D64E12F2FF4C2410073CE4B /* Exceptions for "Docs" folder in "Compile Sources" phase from "Flocus" target */,
 			);
+			path = Docs;
+			sourceTree = "<group>";
+		};
+		4DA34FAD2FEAD0EA00ED3B16 /* Flocus */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
 			path = Flocus;
 			sourceTree = "<group>";
 		};
@@ -69,6 +74,7 @@
 				4DA34FAD2FEAD0EA00ED3B16 /* Flocus */,
 				4D2DC3FB2FEB7C8D008239B7 /* README.md */,
 				4D2DC4032FEB7F72008239B7 /* Screenshots */,
+				4D64E12C2FF4C2400073CE4B /* Docs */,
 				4DA34FAC2FEAD0EA00ED3B16 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -98,6 +104,7 @@
 			);
 			fileSystemSynchronizedGroups = (
 				4D2DC4032FEB7F72008239B7 /* Screenshots */,
+				4D64E12C2FF4C2400073CE4B /* Docs */,
 				4DA34FAD2FEAD0EA00ED3B16 /* Flocus */,
 			);
 			name = Flocus;

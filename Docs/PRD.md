@@ -1,5 +1,5 @@
 //
-//  PRD.md.swift
+//  PRD.md
 //  Flocus
 //
 //  Created by Yuhaya Lissera on 30/06/26.
