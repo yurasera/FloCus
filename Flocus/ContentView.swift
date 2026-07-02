@@ -101,12 +101,12 @@ private struct PriorityTasksView: View {
                     ForEach(tasks) { task in
                         VStack(alignment: .leading, spacing: 6) {
                             HStack {
-                                Image(systemName: "flag.fill")
+                                Image(systemName: "circle.fill")
                                     .foregroundStyle(color(for: task.category?.name))
                                 Text(task.title)
                                     .font(.headline)
                                 Spacer()
-                                Text(task.status.rawValue.capitalized)
+                                Text(task.category?.name ?? "")
                                     .font(.caption)
                                     .padding(.horizontal, 8)
                                     .padding(.vertical, 4)
@@ -119,10 +119,6 @@ private struct PriorityTasksView: View {
                                     .font(.subheadline)
                                     .foregroundStyle(.secondary)
                             }
-
-                            Text(task.category?.name ?? "Uncategorized")
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
                         }
                         .padding(.vertical, 6)
                     }
@@ -308,4 +304,16 @@ private struct AddTaskSheet: View {
 
 #Preview {
     ContentView()
+}
+
+#Preview("Priority Tasks") {
+    let learn = Category(name: "Learn", color: "blue")
+    let projects = Category(name: "Projects", color: "green")
+    let hobbies = Category(name: "Hobbies", color: "yellow")
+
+    PriorityTasksView(tasks: [
+        Task(title: "Learn SwiftData", notes: "Model, query, relationship", category: learn),
+        Task(title: "Build Flocus", notes: "Priority flow", category: projects),
+        Task(title: "Sketch UI", notes: "Explore glass style", category: hobbies)
+    ])
 }
