@@ -44,7 +44,7 @@ struct ContentView: View {
                         .font(.headline)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 14)
-                        .foregroundStyle(Color.brandPrimary)
+                        .foregroundStyle(Color.brandTertiary)
                         .clipShape(RoundedRectangle(cornerRadius: 24))
                         .glassEffect()
                         .tint(Color.brandPrimary)
@@ -85,6 +85,7 @@ struct ContentView: View {
 
 private struct PriorityTasksView: View {
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.modelContext) private var modelContext
 
     let tasks: [Task]
 
@@ -122,6 +123,7 @@ private struct PriorityTasksView: View {
                         }
                         .padding(.vertical, 6)
                     }
+                    .onDelete(perform: deleteTasks)
                 }
             }
             .navigationTitle("Set Priority")
@@ -143,6 +145,12 @@ private struct PriorityTasksView: View {
             return Color.brandPrimary
         default:
             return .secondary
+        }
+    }
+
+    private func deleteTasks(at offsets: IndexSet) {
+        for index in offsets {
+            modelContext.delete(tasks[index])
         }
     }
 }
