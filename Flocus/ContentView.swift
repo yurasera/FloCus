@@ -10,7 +10,7 @@ import SwiftData
 
 struct ContentView: View {
     @Query private var categories: [Category]
-    @Query private var tasks: [Task]
+    @Query(sort: \Task.priorityOrder) private var tasks: [Task]
     @State private var isPresentingPriorityTasks = false
 
     var body: some View {
@@ -124,12 +124,16 @@ private struct PriorityTasksView: View {
                         .padding(.vertical, 6)
                     }
                     .onDelete(perform: deleteTasks)
+                    .onMove(perform: moveTasks)
                 }
             }
             .navigationTitle("Set Priority")
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Close") { dismiss() }
+                }
+                ToolbarItem(placement: .primaryAction) {
+                    EditButton()
                 }
             }
         }
@@ -151,6 +155,15 @@ private struct PriorityTasksView: View {
     private func deleteTasks(at offsets: IndexSet) {
         for index in offsets {
             modelContext.delete(tasks[index])
+        }
+    }
+
+    private func moveTasks(from source: IndexSet, to destination: Int) {
+        var reorderedTasks = tasks
+        reorderedTasks.move(fromOffsets: source, toOffset: destination)
+
+        for (index, task) in reorderedTasks.enumerated() {
+            task.priorityOrder = index
         }
     }
 }
