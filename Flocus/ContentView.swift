@@ -11,6 +11,8 @@ import SwiftData
 struct ContentView: View {
     @Query private var categories: [Category]
     @Query private var tasks: [Task]
+    @State private var isPresentingPriorityTasks = false
+
     var body: some View {
         let learnTasks = tasks.filter { $0.category?.name == CategoryKind.learn.title }
         let projectTasks = tasks.filter { $0.category?.name == CategoryKind.projects.title }
@@ -33,7 +35,7 @@ struct ContentView: View {
             HStack(spacing: 0) {
                 VStack(spacing: 0) {
                     Button {
-                        // Set Priority action
+                        isPresentingPriorityTasks = true
                     } label: {
                         HStack {
                             Image(systemName: "flag.fill")
@@ -42,9 +44,10 @@ struct ContentView: View {
                         .font(.headline)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 14)
-                        .foregroundStyle(Color.brandTertiary)
+                        .foregroundStyle(Color.brandPrimary)
                         .clipShape(RoundedRectangle(cornerRadius: 24))
                         .glassEffect()
+                        .tint(Color.brandPrimary)
                     }
                     Spacer()
                 }
@@ -74,6 +77,77 @@ struct ContentView: View {
             .frame(height: 96)
         }
         .ignoresSafeArea()
+        .sheet(isPresented: $isPresentingPriorityTasks) {
+            PriorityTasksView(tasks: tasks)
+        }
+    }
+}
+
+private struct PriorityTasksView: View {
+    @Environment(\.dismiss) private var dismiss
+
+    let tasks: [Task]
+
+    var body: some View {
+        NavigationStack {
+            List {
+                if tasks.isEmpty {
+                    ContentUnavailableView(
+                        "No Tasks",
+                        systemImage: "checklist",
+                        description: Text("Tambahkan task dulu dari setiap section.")
+                    )
+                } else {
+                    ForEach(tasks) { task in
+                        VStack(alignment: .leading, spacing: 6) {
+                            HStack {
+                                Image(systemName: "flag.fill")
+                                    .foregroundStyle(color(for: task.category?.name))
+                                Text(task.title)
+                                    .font(.headline)
+                                Spacer()
+                                Text(task.status.rawValue.capitalized)
+                                    .font(.caption)
+                                    .padding(.horizontal, 8)
+                                    .padding(.vertical, 4)
+                                    .background(Color.secondary.opacity(0.12))
+                                    .clipShape(Capsule())
+                            }
+
+                            if !task.notes.isEmpty {
+                                Text(task.notes)
+                                    .font(.subheadline)
+                                    .foregroundStyle(.secondary)
+                            }
+
+                            Text(task.category?.name ?? "Uncategorized")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                        .padding(.vertical, 6)
+                    }
+                }
+            }
+            .navigationTitle("Set Priority")
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Close") { dismiss() }
+                }
+            }
+        }
+    }
+
+    private func color(for categoryName: String?) -> Color {
+        switch categoryName {
+        case CategoryKind.learn.title:
+            return Color.brandTertiary
+        case CategoryKind.projects.title:
+            return Color.brandSecondary
+        case CategoryKind.hobbies.title:
+            return Color.brandPrimary
+        default:
+            return .secondary
+        }
     }
 }
 
