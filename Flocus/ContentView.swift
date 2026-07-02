@@ -9,6 +9,7 @@ import SwiftUI
 import SwiftData
 
 struct ContentView: View {
+    @Environment(\.modelContext) private var modelContext
     @Query private var categories: [Category]
     @Query(sort: \Task.priorityOrder) private var tasks: [Task]
     @State private var isPresentingPriorityTasks = false
@@ -18,68 +19,142 @@ struct ContentView: View {
         let projectTasks = tasks.filter { $0.category?.name == CategoryKind.projects.title }
         let hobbyTasks = tasks.filter { $0.category?.name == CategoryKind.hobbies.title }
         VStack(spacing: 0) {
-            HStack(spacing: 0) {
-                // Kiri: 3 bagian vertikal
-                VStack(spacing: 0) {
-                    HeroSection(categories: categories)
-                    CategorySection(category: .learn, tasks: learnTasks)
-                    StatusSection()
-                }
-                
-                // Kanan: 2 bagian vertikal
-                VStack(spacing: 0) {
-                    CategorySection(category: .projects, tasks: projectTasks)
-                    CategorySection(category: .hobbies, tasks: hobbyTasks)
-                }
-            }
-            HStack(spacing: 0) {
-                VStack(spacing: 0) {
-                    Button {
-                        isPresentingPriorityTasks = true
-                    } label: {
-                        HStack {
-                            Image(systemName: "flag.fill")
-                            Text("Set Priority")
-                        }
-                        .font(.headline)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 14)
-                        .foregroundStyle(Color.brandTertiary)
-                        .clipShape(RoundedRectangle(cornerRadius: 24))
-                        .glassEffect()
-                        .tint(Color.brandPrimary)
+            if let focusTask {
+                FocusTaskView(task: focusTask, stopFocus: stopFocus)
+            } else {
+                HStack(spacing: 0) {
+                    // Kiri: 3 bagian vertikal
+                    VStack(spacing: 0) {
+                        HeroSection(categories: categories)
+                        CategorySection(category: .learn, tasks: learnTasks)
+                        StatusSection()
                     }
-                    Spacer()
-                }
-                .padding(16)
-                .background(Color.brandPrimary)
-                
-                VStack(spacing: 0) {
-                    Button {
-                        // Set Priority action
-                    } label: {
-                        HStack {
-                            Image(systemName: "timer")
-                            Text("Start Focus")
-                        }
-                        .font(.headline)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 14)
-                        .foregroundStyle(Color.brandSecondary)
-                        .clipShape(RoundedRectangle(cornerRadius: 24))
-                        .glassEffect()
+                    
+                    // Kanan: 2 bagian vertikal
+                    VStack(spacing: 0) {
+                        CategorySection(category: .projects, tasks: projectTasks)
+                        CategorySection(category: .hobbies, tasks: hobbyTasks)
                     }
-                    Spacer()
                 }
-                .padding(16)
-                .background(Color.brandTertiary)
+                HStack(spacing: 0) {
+                    VStack(spacing: 0) {
+                        Button {
+                            isPresentingPriorityTasks = true
+                        } label: {
+                            HStack {
+                                Image(systemName: "flag.fill")
+                                Text("Set Priority")
+                            }
+                            .font(.headline)
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 14)
+                            .foregroundStyle(Color.brandTertiary)
+                            .clipShape(RoundedRectangle(cornerRadius: 24))
+                            .glassEffect()
+                            .tint(Color.brandPrimary)
+                        }
+                        Spacer()
+                    }
+                    .padding(16)
+                    .background(Color.brandPrimary)
+                    
+                    VStack(spacing: 0) {
+                        Button {
+                            startFocus()
+                        } label: {
+                            HStack {
+                                Image(systemName: "timer")
+                                Text("Start Focus")
+                            }
+                            .font(.headline)
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 14)
+                            .foregroundStyle(Color.brandSecondary)
+                            .clipShape(RoundedRectangle(cornerRadius: 24))
+                            .glassEffect()
+                        }
+                        Spacer()
+                    }
+                    .padding(16)
+                    .background(Color.brandTertiary)
+                }
+                .frame(height: 96)
             }
-            .frame(height: 96)
         }
         .ignoresSafeArea()
         .sheet(isPresented: $isPresentingPriorityTasks) {
             PriorityTasksView(tasks: tasks)
         }
+    }
+
+    private var focusTask: Task? {
+        tasks.first { $0.status == .focus }
+    }
+
+    private func startFocus() {
+        guard let priorityTask = tasks.first else {
+            return
+        }
+
+        for task in tasks {
+            task.status = task == priorityTask ? .focus : .backlog
+        }
+
+        try? modelContext.save()
+    }
+
+    private func stopFocus() {
+        focusTask?.status = .backlog
+        try? modelContext.save()
+    }
+}
+
+private struct FocusTaskView: View {
+    let task: Task
+    let stopFocus: () -> Void
+
+    var body: some View {
+        VStack(spacing: 24) {
+            Spacer()
+
+            Text("Focus")
+                .font(.caption)
+                .fontWeight(.semibold)
+                .textCase(.uppercase)
+                .foregroundStyle(.secondary)
+
+            Text(task.title)
+                .font(.largeTitle)
+                .fontWeight(.bold)
+                .multilineTextAlignment(.center)
+
+            if !task.notes.isEmpty {
+                Text(task.notes)
+                    .font(.title3)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+            }
+
+            Text(task.category?.name ?? "Uncategorized")
+                .font(.headline)
+                .padding(.horizontal, 16)
+                .padding(.vertical, 8)
+                .background(Color.secondary.opacity(0.12))
+                .clipShape(Capsule())
+
+            Button("Stop Focus", action: stopFocus)
+                .font(.headline)
+                .padding(.horizontal, 24)
+                .padding(.vertical, 12)
+                .clipShape(RoundedRectangle(cornerRadius: 24))
+                .glassEffect()
+
+            Spacer()
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .padding(32)
+        .background(Color.brandPrimary)
+        .foregroundStyle(.white)
     }
 }
 
