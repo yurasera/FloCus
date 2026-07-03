@@ -7,11 +7,13 @@
 
 import SwiftUI
 internal import Combine
+import CoreHaptics
 
 struct FocusTaskView: View {
     let task: Task
     let stopFocus: () -> Void
     @State private var now = Date()
+    @State private var hapticEngine: CHHapticEngine?
     @State private var pomodoroRemaining = 0
     @State private var isPomodoroRunning = false
     @State private var pomodoroType = ""
@@ -128,6 +130,9 @@ struct FocusTaskView: View {
         .padding(32)
         .background(color(for: task.category?.name))
         .foregroundStyle(textColor(for: task.category?.name))
+        .onAppear {
+            prepareHaptics()
+        }
         .onReceive(focusTimer) { date in
             now = date
         }
@@ -141,6 +146,7 @@ struct FocusTaskView: View {
                 stopPomodoro()
             }
         }
+        
     }
     
     private func color(for categoryName: String?) -> Color {
@@ -199,24 +205,85 @@ struct FocusTaskView: View {
         pomodoroType = ""
     }
     
+    private func prepareHaptics() {
+        guard CHHapticEngine.capabilitiesForHardware().supportsHaptics else {
+            return
+        }
+
+        do {
+            hapticEngine = try CHHapticEngine()
+            try hapticEngine?.start()
+        } catch {
+            print("Failed to start haptic engine: \(error)")
+        }
+    }
+    
     private func playStartHaptic() {
-        let generator = UIImpactFeedbackGenerator(style: .medium)
-        generator.prepare()
-        generator.impactOccurred()
+
+        guard CHHapticEngine.capabilitiesForHardware().supportsHaptics,
+              let engine = hapticEngine else {
+            return
+        }
+
+        do {
+
+            let event = CHHapticEvent(
+                eventType: .hapticContinuous,
+                parameters: [
+                    CHHapticEventParameter(parameterID: .hapticIntensity, value: 1.0),
+                    CHHapticEventParameter(parameterID: .hapticSharpness, value: 0.5)
+                ],
+                relativeTime: 0,
+                duration: 0.8
+            )
+
+            let pattern = try CHHapticPattern(events: [event], parameters: [])
+
+            let player = try engine.makePlayer(with: pattern)
+
+            try player.start(atTime: 0)
+
+        } catch {
+            print(error)
+        }
     }
 
     private func playFinishHaptic() {
-        let generator = UINotificationFeedbackGenerator()
-        generator.prepare()
 
-        generator.notificationOccurred(.success)
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-            generator.notificationOccurred(.success)
+        guard CHHapticEngine.capabilitiesForHardware().supportsHaptics,
+              let engine = hapticEngine else {
+            return
         }
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
-            generator.notificationOccurred(.success)
+        do {
+
+            let events = [
+
+                CHHapticEvent(
+                    eventType: .hapticContinuous,
+                    parameters: [
+                        CHHapticEventParameter(parameterID: .hapticIntensity, value: 1.0),
+                        CHHapticEventParameter(parameterID: .hapticSharpness, value: 0.8)
+                    ],
+                    relativeTime: 0,
+                    duration: 1.0
+                ),
+
+                CHHapticEvent(
+                    eventType: .hapticTransient,
+                    parameters: [],
+                    relativeTime: 1.1
+                )
+            ]
+
+            let pattern = try CHHapticPattern(events: events, parameters: [])
+
+            let player = try engine.makePlayer(with: pattern)
+
+            try player.start(atTime: 0)
+
+        } catch {
+            print(error)
         }
     }
 
