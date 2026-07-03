@@ -17,17 +17,26 @@ struct FocusTaskView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            VStack(spacing: 8) {
-                Text("Focus")
+            HStack(spacing: 8) {
+                VStack(alignment: .leading, spacing: 8){
+                    Text("Focus")
+                        .font(.caption)
+                        .fontWeight(.semibold)
+                        .textCase(.uppercase)
+                        .foregroundStyle(.secondary)
+                    Text(task.category?.name ?? "Uncategorized")
+                        .font(.caption)
+                        .fontWeight(.semibold)
+                        .textCase(.uppercase)
+                        .foregroundStyle(.secondary)
+                }
+                Spacer()
+
+                Text(focusDurationText)
                     .font(.caption)
                     .fontWeight(.semibold)
                     .textCase(.uppercase)
                     .foregroundStyle(.secondary)
-
-                Text(focusDurationText)
-                    .font(.title2)
-                    .fontWeight(.bold)
-                    .monospacedDigit()
             }
             .padding(.top, 48)
 
@@ -48,11 +57,6 @@ struct FocusTaskView: View {
             Spacer()
 
             VStack(spacing: 16) {
-                Text(task.category?.name ?? "Uncategorized")
-                    .font(.caption)
-                    .fontWeight(.semibold)
-                    .textCase(.uppercase)
-                    .foregroundStyle(.secondary)
 
                 Button("Stop Focus", action: stopFocus)
                     .font(.headline)
@@ -65,10 +69,36 @@ struct FocusTaskView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .padding(32)
-        .background(Color.brandPrimary)
-        .foregroundStyle(.white)
+        .background(color(for: task.category?.name))
+        .foregroundStyle(textColor(for: task.category?.name))
         .onReceive(timer) { date in
             now = date
+        }
+    }
+    
+    private func color(for categoryName: String?) -> Color {
+        switch categoryName {
+        case CategoryKind.learn.title:
+            return Color.brandPrimary
+        case CategoryKind.projects.title:
+            return Color.brandSecondary
+        case CategoryKind.hobbies.title:
+            return Color.brandTertiary
+        default:
+            return .secondary
+        }
+    }
+    
+    private func textColor(for categoryName: String?) -> Color {
+        switch categoryName {
+        case CategoryKind.learn.title:
+            return Color.brandTertiary
+        case CategoryKind.projects.title:
+            return Color.brandTertiary
+        case CategoryKind.hobbies.title:
+            return Color.brandPrimary
+        default:
+            return .secondary
         }
     }
 

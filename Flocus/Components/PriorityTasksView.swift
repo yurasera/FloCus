@@ -67,11 +67,11 @@ struct PriorityTasksView: View {
     private func color(for categoryName: String?) -> Color {
         switch categoryName {
         case CategoryKind.learn.title:
-            return Color.brandTertiary
+            return Color.brandPrimary
         case CategoryKind.projects.title:
             return Color.brandSecondary
         case CategoryKind.hobbies.title:
-            return Color.brandPrimary
+            return Color.brandTertiary
         default:
             return .secondary
         }

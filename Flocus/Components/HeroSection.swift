@@ -19,10 +19,13 @@ struct HeroSection: View {
 
                 Text("Three words.")
                     .font(.callout)
+                    .foregroundStyle(Color.brandTertiary)
                 Text("Three roles.")
                     .font(.callout)
+                    .foregroundStyle(Color.brandTertiary)
                 Text("One journey.")
                     .font(.callout)
+                    .foregroundStyle(Color.brandTertiary)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .foregroundColor(.white)
