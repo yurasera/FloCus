@@ -137,6 +137,7 @@ struct FocusTaskView: View {
             if pomodoroRemaining > 0 {
                 pomodoroRemaining -= 1
             } else {
+                playFinishHaptic()
                 stopPomodoro()
             }
         }
@@ -183,15 +184,40 @@ struct FocusTaskView: View {
     }
     
     private func startPomodoro(minutes: Int, title: String) {
+        playStartHaptic()
+        
         pomodoroRemaining = minutes * 60
         pomodoroType = title
         isPomodoroRunning = true
     }
 
     private func stopPomodoro() {
+        playFinishHaptic()
+        
         isPomodoroRunning = false
         pomodoroRemaining = 0
         pomodoroType = ""
+    }
+    
+    private func playStartHaptic() {
+        let generator = UIImpactFeedbackGenerator(style: .medium)
+        generator.prepare()
+        generator.impactOccurred()
+    }
+
+    private func playFinishHaptic() {
+        let generator = UINotificationFeedbackGenerator()
+        generator.prepare()
+
+        generator.notificationOccurred(.success)
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            generator.notificationOccurred(.success)
+        }
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+            generator.notificationOccurred(.success)
+        }
     }
 
     private var pomodoroTimeText: String {
