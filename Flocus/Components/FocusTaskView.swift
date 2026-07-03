@@ -12,8 +12,13 @@ struct FocusTaskView: View {
     let task: Task
     let stopFocus: () -> Void
     @State private var now = Date()
+    @State private var pomodoroRemaining = 0
+    @State private var isPomodoroRunning = false
+    @State private var pomodoroType = ""
 
-    private let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+    private let focusTimer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+
+    private let pomodoroTimer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
 
     var body: some View {
         VStack(spacing: 0) {
@@ -53,6 +58,58 @@ struct FocusTaskView: View {
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
             }
+            
+            VStack(spacing: 16) {
+
+                if isPomodoroRunning {
+
+                    Text(pomodoroType)
+                        .font(.headline)
+
+                    Text(pomodoroTimeText)
+                        .font(.system(size: 48, weight: .bold, design: .monospaced))
+
+                    Button("Stop Pomodoro") {
+                        stopPomodoro()
+                    }
+                    .font(.headline)
+                    .padding(.horizontal, 24)
+                    .padding(.vertical, 12)
+                    .clipShape(RoundedRectangle(cornerRadius: 24))
+                    .glassEffect()
+
+                } else {
+                    HStack(spacing: 8){
+                        Button("25 min") {
+                            startPomodoro(minutes: 25, title: "Task")
+                        }
+                        .font(.caption)
+                        .padding(.horizontal, 24)
+                        .padding(.vertical, 12)
+                        .clipShape(RoundedRectangle(cornerRadius: 24))
+                        .glassEffect()
+                        
+                        Button("5 min") {
+                            startPomodoro(minutes: 5, title: "Quick Break")
+                        }
+                        .font(.caption)
+                        .padding(.horizontal, 24)
+                        .padding(.vertical, 12)
+                        .clipShape(RoundedRectangle(cornerRadius: 24))
+                        .glassEffect()
+                        
+                        Button("15 min") {
+                            startPomodoro(minutes: 15, title: "Long Break")
+                        }
+                        .font(.caption)
+                        .padding(.horizontal, 24)
+                        .padding(.vertical, 12)
+                        .clipShape(RoundedRectangle(cornerRadius: 24))
+                        .glassEffect()
+                    }
+                }
+            }
+            .padding(.top, 24)
 
             Spacer()
 
@@ -71,8 +128,17 @@ struct FocusTaskView: View {
         .padding(32)
         .background(color(for: task.category?.name))
         .foregroundStyle(textColor(for: task.category?.name))
-        .onReceive(timer) { date in
+        .onReceive(focusTimer) { date in
             now = date
+        }
+        .onReceive(pomodoroTimer) { _ in
+            guard isPomodoroRunning else { return }
+
+            if pomodoroRemaining > 0 {
+                pomodoroRemaining -= 1
+            } else {
+                stopPomodoro()
+            }
         }
     }
     
@@ -112,6 +178,25 @@ struct FocusTaskView: View {
         if hours > 0 {
             return String(format: "%02d:%02d:%02d", hours, minutes, seconds)
         }
+
+        return String(format: "%02d:%02d", minutes, seconds)
+    }
+    
+    private func startPomodoro(minutes: Int, title: String) {
+        pomodoroRemaining = minutes * 60
+        pomodoroType = title
+        isPomodoroRunning = true
+    }
+
+    private func stopPomodoro() {
+        isPomodoroRunning = false
+        pomodoroRemaining = 0
+        pomodoroType = ""
+    }
+
+    private var pomodoroTimeText: String {
+        let minutes = pomodoroRemaining / 60
+        let seconds = pomodoroRemaining % 60
 
         return String(format: "%02d:%02d", minutes, seconds)
     }
