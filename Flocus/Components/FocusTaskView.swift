@@ -8,6 +8,7 @@
 import SwiftUI
 internal import Combine
 import CoreHaptics
+import AudioToolbox
 
 struct FocusTaskView: View {
     let task: Task
@@ -143,6 +144,7 @@ struct FocusTaskView: View {
                 pomodoroRemaining -= 1
             } else {
                 playFinishHaptic()
+                playFinishSound()
                 stopPomodoro()
             }
         }
@@ -191,6 +193,7 @@ struct FocusTaskView: View {
     
     private func startPomodoro(minutes: Int, title: String) {
         playStartHaptic()
+        playStartSound()
         
         pomodoroRemaining = minutes * 60
         pomodoroType = title
@@ -199,6 +202,7 @@ struct FocusTaskView: View {
 
     private func stopPomodoro() {
         playFinishHaptic()
+        playFinishSound()
         
         isPomodoroRunning = false
         pomodoroRemaining = 0
@@ -285,6 +289,14 @@ struct FocusTaskView: View {
         } catch {
             print(error)
         }
+    }
+    
+    private func playStartSound() {
+        AudioServicesPlaySystemSound(1113)
+    }
+
+    private func playFinishSound() {
+        AudioServicesPlaySystemSound(1005)
     }
 
     private var pomodoroTimeText: String {
