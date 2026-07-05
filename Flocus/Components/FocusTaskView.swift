@@ -6,22 +6,19 @@
 //
 
 import SwiftUI
-internal import Combine
 import CoreHaptics
 import AudioToolbox
+internal import Combine
 
 struct FocusTaskView: View {
     let task: Task
     let stopFocus: () -> Void
+    
+    @Environment(PomodoroManager.self) private var pomodoroManager
     @State private var now = Date()
     @State private var hapticEngine: CHHapticEngine?
-    @State private var pomodoroRemaining = 0
-    @State private var isPomodoroRunning = false
-    @State private var pomodoroType = ""
 
     private let focusTimer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
-
-    private let pomodoroTimer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
 
     var body: some View {
         VStack(spacing: 0) {
@@ -64,16 +61,17 @@ struct FocusTaskView: View {
             
             VStack(spacing: 16) {
 
-                if isPomodoroRunning {
+                if pomodoroManager.isRunning {
 
-                    Text(pomodoroType)
+                    Text(pomodoroManager.currentTask?.title ?? "")
                         .font(.headline)
+                        .multilineTextAlignment(.center)
 
-                    Text(pomodoroTimeText)
+                    Text(formatTime(pomodoroManager.remainingTime))
                         .font(.system(size: 48, weight: .bold, design: .monospaced))
 
                     Button("Stop Pomodoro") {
-                        stopPomodoro()
+                        pomodoroManager.stopPomodoro()
                     }
                     .font(.headline)
                     .padding(.horizontal, 24)
@@ -84,7 +82,9 @@ struct FocusTaskView: View {
                 } else {
                     HStack(spacing: 8){
                         Button("25 min") {
-                            startPomodoro(minutes: 25, title: "Task")
+                            pomodoroManager.startPomodoro(for: task, duration: 25 * 60)
+                            playStartHaptic()
+                            playStartSound()
                         }
                         .font(.caption)
                         .padding(.horizontal, 24)
@@ -93,7 +93,9 @@ struct FocusTaskView: View {
                         .glassEffect()
                         
                         Button("5 min") {
-                            startPomodoro(minutes: 5, title: "Quick Break")
+                            pomodoroManager.startPomodoro(for: task, duration: 5 * 60)
+                            playStartHaptic()
+                            playStartSound()
                         }
                         .font(.caption)
                         .padding(.horizontal, 24)
@@ -102,7 +104,9 @@ struct FocusTaskView: View {
                         .glassEffect()
                         
                         Button("15 min") {
-                            startPomodoro(minutes: 15, title: "Long Break")
+                            pomodoroManager.startPomodoro(for: task, duration: 15 * 60)
+                            playStartHaptic()
+                            playStartSound()
                         }
                         .font(.caption)
                         .padding(.horizontal, 24)
@@ -137,18 +141,6 @@ struct FocusTaskView: View {
         .onReceive(focusTimer) { date in
             now = date
         }
-        .onReceive(pomodoroTimer) { _ in
-            guard isPomodoroRunning else { return }
-
-            if pomodoroRemaining > 0 {
-                pomodoroRemaining -= 1
-            } else {
-                playFinishHaptic()
-                playFinishSound()
-                stopPomodoro()
-            }
-        }
-        
     }
     
     private func color(for categoryName: String?) -> Color {
@@ -191,22 +183,10 @@ struct FocusTaskView: View {
         return String(format: "%02d:%02d", minutes, seconds)
     }
     
-    private func startPomodoro(minutes: Int, title: String) {
-        playStartHaptic()
-        playStartSound()
-        
-        pomodoroRemaining = minutes * 60
-        pomodoroType = title
-        isPomodoroRunning = true
-    }
-
-    private func stopPomodoro() {
-        playFinishHaptic()
-        playFinishSound()
-        
-        isPomodoroRunning = false
-        pomodoroRemaining = 0
-        pomodoroType = ""
+    private func formatTime(_ timeInterval: TimeInterval) -> String {
+        let minutes = Int(timeInterval) / 60
+        let seconds = Int(timeInterval) % 60
+        return String(format: "%02d:%02d", minutes, seconds)
     }
     
     private func prepareHaptics() {
@@ -297,12 +277,5 @@ struct FocusTaskView: View {
 
     private func playFinishSound() {
         AudioServicesPlaySystemSound(1005)
-    }
-
-    private var pomodoroTimeText: String {
-        let minutes = pomodoroRemaining / 60
-        let seconds = pomodoroRemaining % 60
-
-        return String(format: "%02d:%02d", minutes, seconds)
     }
 }
