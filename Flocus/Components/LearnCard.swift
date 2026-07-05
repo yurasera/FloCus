@@ -14,6 +14,8 @@ struct LearnCard: View {
     let background: Color
     let foreground: Color
     var task: Task?
+    
+    @Environment(\.modelContext) private var modelContext
 
     var body: some View {
         let isCompleted = task?.status == .completed
@@ -64,6 +66,7 @@ struct LearnCard: View {
                         task.status = .completed
                         task.completedAt = .now
                     }
+                    try? modelContext.save()
                 }
             }
         }

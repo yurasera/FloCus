@@ -92,14 +92,29 @@ struct ContentView: View {
     }
 
     private func startFocus() {
-        guard let priorityTask = tasks.first else {
+        guard let priorityTask = tasks.first(where: { $0.status == .backlog }) else {
             return
         }
 
         for task in tasks {
-            task.status = task == priorityTask ? .focus : .backlog
-            task.focusStartedAt = task == priorityTask ? .now : nil
+            switch task.status {
+            case .completed:
+                break
+
+            case .focus:
+                task.status = .backlog
+                task.focusStartedAt = nil
+
+            case .backlog:
+                break
+
+            case .archive:
+                break
+            }
         }
+
+        priorityTask.status = .focus
+        priorityTask.focusStartedAt = .now
 
         try? modelContext.save()
     }
