@@ -15,9 +15,20 @@ struct ContentView: View {
     @State private var isPresentingPriorityTasks = false
 
     var body: some View {
-        let learnTasks = tasks.filter { $0.category?.name == CategoryKind.learn.title }
-        let projectTasks = tasks.filter { $0.category?.name == CategoryKind.projects.title }
-        let hobbyTasks = tasks.filter { $0.category?.name == CategoryKind.hobbies.title }
+        let learnTasks = tasks.filter {
+            $0.category?.name == CategoryKind.learn.title &&
+            $0.status != .archive
+        }
+
+        let projectTasks = tasks.filter {
+            $0.category?.name == CategoryKind.projects.title &&
+            $0.status != .archive
+        }
+
+        let hobbyTasks = tasks.filter {
+            $0.category?.name == CategoryKind.hobbies.title &&
+            $0.status != .archive
+        }
         VStack(spacing: 0) {
             if let focusTask {
                 FocusTaskView(task: focusTask, stopFocus: stopFocus)
