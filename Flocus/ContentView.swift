@@ -172,13 +172,15 @@ enum CategoryKind {
                 title: "",
                 description: "",
                 background: headerColor,
-                foreground: backgroundColor
+                foreground: backgroundColor,
+                task: nil
             )
             LearnCard(
                 title: "",
                 description: "",
                 background: headerColor,
-                foreground: backgroundColor
+                foreground: backgroundColor,
+                task: nil
             )
         } else {
             ForEach(limited) { task in
@@ -186,7 +188,8 @@ enum CategoryKind {
                     title: task.title,
                     description: task.notes,
                     background: headerColor,
-                    foreground: backgroundColor
+                    foreground: backgroundColor,
+                    task: task
                 )
             }
         }

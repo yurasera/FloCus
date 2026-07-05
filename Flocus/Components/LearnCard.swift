@@ -6,16 +6,17 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct LearnCard: View {
     let title: String
     let description: String
     let background: Color
     let foreground: Color
-
-    @State private var isCompleted = false
+    var task: Task?
 
     var body: some View {
+        let isCompleted = task?.status == .completed
         VStack(alignment: .leading, spacing: Spacing.small) {
 
             HStack {
@@ -55,7 +56,15 @@ struct LearnCard: View {
         )
         .onTapGesture {
             withAnimation(.spring) {
-                isCompleted.toggle()
+                if let task = task {
+                    if task.status == .completed {
+                        task.status = .backlog
+                        task.completedAt = nil
+                    } else {
+                        task.status = .completed
+                        task.completedAt = .now
+                    }
+                }
             }
         }
     }
