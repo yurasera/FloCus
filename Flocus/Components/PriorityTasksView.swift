@@ -71,20 +71,8 @@ struct PriorityTasksView: View {
                 Section {
                     VStack(spacing: 16) {
                         VStack(alignment: .leading, spacing: 8) {
-                            Text("Category")
-                                .font(.subheadline)
-                                .foregroundStyle(.secondary)
-                            Picker("Category", selection: $selectedCategory) {
-                                ForEach(CategoryFilter.allCases) { category in
-                                    Text(category.rawValue).tag(category)
-                                }
-                            }
-                            .pickerStyle(.segmented)
-                        }
-                        
-                        VStack(alignment: .leading, spacing: 8) {
                             HStack {
-                                Text("Progress")
+                                Text("Category")
                                     .font(.subheadline)
                                     .foregroundStyle(.secondary)
                                 Spacer()
@@ -105,7 +93,6 @@ struct PriorityTasksView: View {
                                     .background(.thinMaterial, in: Capsule())
                                 }
                             }
-
                             if showProgressFilter {
                                 VStack(spacing: 8) {
                                     ForEach(ProgressFilter.allCases) { progress in
@@ -137,6 +124,12 @@ struct PriorityTasksView: View {
                                 }
                                 .padding(.top, 4)
                             }
+                            Picker("Category", selection: $selectedCategory) {
+                                ForEach(CategoryFilter.allCases) { category in
+                                    Text(category.rawValue).tag(category)
+                                }
+                            }
+                            .pickerStyle(.segmented)
                         }
                     }
                     .padding(.vertical, 8)
@@ -170,10 +163,6 @@ struct PriorityTasksView: View {
                                     .font(.subheadline)
                                     .foregroundStyle(.secondary)
                             }
-                            
-                            Text(task.status.title)
-                                .font(.subheadline)
-                                .foregroundStyle(.secondary)
                         }
                         .padding(.vertical, 6)
                         .swipeActions(edge: .trailing, allowsFullSwipe: false) {
@@ -199,6 +188,7 @@ struct PriorityTasksView: View {
                 }
             }
             .navigationTitle("Set Priority")
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Close") { dismiss() }
