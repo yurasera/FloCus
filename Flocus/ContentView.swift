@@ -137,23 +137,6 @@ struct ContentView: View {
     }
 }
 
-// MARK: - Sections
-
-struct StatusSection: View {
-    var body: some View {
-        VStack {
-            Spacer()
-            HStack(spacing: Spacing.medium) {
-                StatusBadge(color: Color.brandPrimary)
-                StatusBadge(color: Color.brandSecondary)
-                StatusBadge(color: Color.brandTertiary)
-            }
-            Spacer()
-        }
-        .frame(maxWidth: .infinity)
-        .background(Color.brandPrimary)
-    }
-}
 
 // MARK: - Generic Category Section
 
