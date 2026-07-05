@@ -51,8 +51,25 @@ struct PriorityTasksView: View {
                                 .foregroundStyle(.secondary)
                         }
                         .padding(.vertical, 6)
+                        .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                            Button(role: .destructive) {
+                                if let index = tasks.firstIndex(where: { $0.id == task.id }) {
+                                    deleteTasks(at: IndexSet(integer: index))
+                                }
+                            } label: {
+                                Image(systemName: "trash.fill")
+                                Text("Delete")
+                            }
+                            
+                            Button {
+                                archiveTask(task)
+                            } label: {
+                                Image(systemName: "archivebox.fill")
+                                Text("Archive")
+                            }
+                            .tint(.orange)
+                        }
                     }
-                    .onDelete(perform: deleteTasks)
                     .onMove(perform: moveTasks)
                 }
             }
@@ -93,6 +110,10 @@ struct PriorityTasksView: View {
         for (idx, t) in reordered.enumerated() {
             t.priorityOrder = idx
         }
+    }
+    
+    private func archiveTask(_ task: Task) {
+        task.status = .archive
     }
 }
 
