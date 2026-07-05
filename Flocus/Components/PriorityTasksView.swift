@@ -8,23 +8,102 @@
 import SwiftUI
 import SwiftData
 
+enum CategoryFilter: String, CaseIterable, Identifiable {
+    case all = "All"
+    case learn = "Learn"
+    case projects = "Projects"
+    case hobbies = "Hobbies"
+    
+    var id: String { rawValue }
+}
+
+enum ProgressFilter: String, CaseIterable, Identifiable {
+    case active = "Active"
+    case completed = "Completed"
+    case archive = "Archive"
+    
+    var id: String { rawValue }
+}
+
 struct PriorityTasksView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
 
     let tasks: [Task]
+    
+    @State private var selectedCategory: CategoryFilter = .all
+    @State private var selectedProgress: ProgressFilter = .active
+    
+    private var filteredTasks: [Task] {
+        tasks.filter { task in
+            // Filter by category
+            let categoryMatch: Bool
+            switch selectedCategory {
+            case .all:
+                categoryMatch = true
+            case .learn:
+                categoryMatch = task.category?.name == CategoryKind.learn.title
+            case .projects:
+                categoryMatch = task.category?.name == CategoryKind.projects.title
+            case .hobbies:
+                categoryMatch = task.category?.name == CategoryKind.hobbies.title
+            }
+            
+            // Filter by progress
+            let progressMatch: Bool
+            switch selectedProgress {
+            case .active:
+                progressMatch = task.status == .backlog || task.status == .focus
+            case .completed:
+                progressMatch = task.status == .completed
+            case .archive:
+                progressMatch = task.status == .archive
+            }
+            
+            return categoryMatch && progressMatch
+        }
+    }
 
     var body: some View {
         NavigationStack {
             List {
-                if tasks.isEmpty {
+                Section {
+                    VStack(spacing: 16) {
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("Category")
+                                .font(.subheadline)
+                                .foregroundStyle(.secondary)
+                            Picker("Category", selection: $selectedCategory) {
+                                ForEach(CategoryFilter.allCases) { category in
+                                    Text(category.rawValue).tag(category)
+                                }
+                            }
+                            .pickerStyle(.segmented)
+                        }
+                        
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("Progress")
+                                .font(.subheadline)
+                                .foregroundStyle(.secondary)
+                            Picker("Progress", selection: $selectedProgress) {
+                                ForEach(ProgressFilter.allCases) { progress in
+                                    Text(progress.rawValue).tag(progress)
+                                }
+                            }
+                            .pickerStyle(.segmented)
+                        }
+                    }
+                    .padding(.vertical, 8)
+                }
+                
+                if filteredTasks.isEmpty {
                     ContentUnavailableView(
                         "No Tasks",
                         systemImage: "checklist",
-                        description: Text("Tambahkan task dulu dari setiap section.")
+                        description: Text("Tidak ada task yang sesuai dengan filter.")
                     )
                 } else {
-                    ForEach(tasks) { task in
+                    ForEach(filteredTasks) { task in
                         VStack(alignment: .leading, spacing: 6) {
                             HStack {
                                 Image(systemName: "circle.fill")
@@ -100,12 +179,13 @@ struct PriorityTasksView: View {
 
     private func deleteTasks(at offsets: IndexSet) {
         for index in offsets {
-            modelContext.delete(tasks[index])
+            let taskToDelete = filteredTasks[index]
+            modelContext.delete(taskToDelete)
         }
     }
 
     private func moveTasks(from source: IndexSet, to destination: Int) {
-        var reordered = tasks
+        var reordered = filteredTasks
         reordered.move(fromOffsets: source, toOffset: destination)
         for (idx, t) in reordered.enumerated() {
             t.priorityOrder = idx
@@ -113,7 +193,11 @@ struct PriorityTasksView: View {
     }
     
     private func archiveTask(_ task: Task) {
-        task.status = .archive
+        // Find the original task from the full tasks list
+        if let index = tasks.firstIndex(where: { $0.id == task.id }) {
+            tasks[index].status = .archive
+            try? modelContext.save()
+        }
     }
 }
 
