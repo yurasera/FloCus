@@ -45,6 +45,10 @@ struct PriorityTasksView: View {
                                     .font(.subheadline)
                                     .foregroundStyle(.secondary)
                             }
+                            
+                            Text(task.status.title)
+                                .font(.subheadline)
+                                .foregroundStyle(.secondary)
                         }
                         .padding(.vertical, 6)
                     }
@@ -84,11 +88,10 @@ struct PriorityTasksView: View {
     }
 
     private func moveTasks(from source: IndexSet, to destination: Int) {
-        var reorderedTasks = tasks
-        reorderedTasks.move(fromOffsets: source, toOffset: destination)
-
-        for (index, task) in reorderedTasks.enumerated() {
-            task.priorityOrder = index
+        var reordered = tasks
+        reordered.move(fromOffsets: source, toOffset: destination)
+        for (idx, t) in reordered.enumerated() {
+            t.priorityOrder = idx
         }
     }
 }
