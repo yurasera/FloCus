@@ -16,6 +16,7 @@ struct HeroSection: View {
                 Text("Flocus")
                     .font(.largeTitle)
                     .fontWeight(.bold)
+                    .foregroundStyle(Color.brandSecondary)
 
                 Text("Three words.")
                     .font(.callout)
