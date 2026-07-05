@@ -1,5 +1,5 @@
 //
-//  FocusTaskView.swift
+//  FocusView.swift
 //  Flocus
 //
 //  Created by Yuhaya Lissera on 02/07/26.
@@ -10,7 +10,7 @@ import CoreHaptics
 import AudioToolbox
 internal import Combine
 
-struct FocusTaskView: View {
+struct FocusView: View {
     let task: Task
     let stopFocus: () -> Void
     

@@ -25,7 +25,7 @@ enum ProgressFilter: String, CaseIterable, Identifiable {
     var id: String { rawValue }
 }
 
-struct PriorityTasksView: View {
+struct PriorityView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
 
@@ -242,7 +242,7 @@ struct PriorityTasksView: View {
     let projects = Category(name: "Projects", color: "green")
     let hobbies = Category(name: "Hobbies", color: "yellow")
 
-    PriorityTasksView(tasks: [
+    PriorityView(tasks: [
         Task(title: "Learn SwiftData", notes: "Model, query, relationship", category: learn),
         Task(title: "Build Flocus", notes: "Priority flow", category: projects),
         Task(title: "Sketch UI", notes: "Explore glass style", category: hobbies)
