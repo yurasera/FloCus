@@ -33,6 +33,7 @@ struct PriorityTasksView: View {
     
     @State private var selectedCategory: CategoryFilter = .all
     @State private var selectedProgress: ProgressFilter = .active
+    @State private var showProgressFilter = false
     
     private var filteredTasks: [Task] {
         tasks.filter { task in
@@ -82,15 +83,60 @@ struct PriorityTasksView: View {
                         }
                         
                         VStack(alignment: .leading, spacing: 8) {
-                            Text("Progress")
-                                .font(.subheadline)
-                                .foregroundStyle(.secondary)
-                            Picker("Progress", selection: $selectedProgress) {
-                                ForEach(ProgressFilter.allCases) { progress in
-                                    Text(progress.rawValue).tag(progress)
+                            HStack {
+                                Text("Progress")
+                                    .font(.subheadline)
+                                    .foregroundStyle(.secondary)
+                                Spacer()
+                                Button {
+                                    withAnimation(.snappy) {
+                                        showProgressFilter.toggle()
+                                    }
+                                } label: {
+                                    HStack(spacing: 6) {
+                                        Text(selectedProgress.rawValue)
+                                        Image(systemName: showProgressFilter ? "chevron.up" : "chevron.down")
+                                            .font(.caption2)
+                                    }
+                                    .font(.subheadline.weight(.medium))
+                                    .foregroundStyle(.primary)
+                                    .padding(.horizontal, 12)
+                                    .padding(.vertical, 8)
+                                    .background(.thinMaterial, in: Capsule())
                                 }
                             }
-                            .pickerStyle(.segmented)
+
+                            if showProgressFilter {
+                                VStack(spacing: 8) {
+                                    ForEach(ProgressFilter.allCases) { progress in
+                                        Button {
+                                            selectedProgress = progress
+                                            withAnimation(.snappy) {
+                                                showProgressFilter = false
+                                            }
+                                        } label: {
+                                            HStack {
+                                                Text(progress.rawValue)
+                                                Spacer()
+                                                if selectedProgress == progress {
+                                                    Image(systemName: "checkmark")
+                                                        .font(.caption.weight(.semibold))
+                                                }
+                                            }
+                                            .font(.subheadline)
+                                            .foregroundStyle(.primary)
+                                            .padding(.horizontal, 12)
+                                            .padding(.vertical, 10)
+                                            .background(
+                                                RoundedRectangle(cornerRadius: 10)
+                                                    .fill(selectedProgress == progress ? Color.secondary.opacity(0.14) : Color.clear)
+                                            )
+                                        }
+                                        .buttonStyle(.plain)
+                                    }
+                                }
+                                .padding(.top, 4)
+                            }
                         }
                     }
                     .padding(.vertical, 8)
