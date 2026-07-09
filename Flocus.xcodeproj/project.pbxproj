@@ -16,6 +16,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		4D0E5A792FFF357A00CAAB8B /* Exceptions for "Flocus" folder in "Flocus" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 4DA34FAA2FEAD0EA00ED3B16 /* Flocus */;
+		};
 		4D64E12E2FF4C2410073CE4B /* Exceptions for "Docs" folder in "Flocus" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -52,6 +59,9 @@
 		};
 		4DA34FAD2FEAD0EA00ED3B16 /* Flocus */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				4D0E5A792FFF357A00CAAB8B /* Exceptions for "Flocus" folder in "Flocus" target */,
+			);
 			path = Flocus;
 			sourceTree = "<group>";
 		};
@@ -301,6 +311,7 @@
 				DEVELOPMENT_TEAM = 6K98GXCG5L;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Flocus/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -333,6 +344,7 @@
 				DEVELOPMENT_TEAM = 6K98GXCG5L;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Flocus/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

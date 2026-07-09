@@ -8,6 +8,7 @@
 import SwiftUI
 import SwiftData
 import UserNotifications
+import AVFoundation
 
 @Observable
 final class PomodoroManager {
@@ -19,6 +20,9 @@ final class PomodoroManager {
     // MARK: - Private Properties
     private var timer: Timer?
     private let defaults = UserDefaults.standard
+    private var audioPlayer: AVAudioPlayer?
+    private var audioEngine: AVAudioEngine?
+    private var playerNode: AVAudioPlayerNode?
     
     // MARK: - Keys for UserDefaults
     private let startDateKey = "pomodoroStartDate"
@@ -32,7 +36,84 @@ final class PomodoroManager {
     
     // MARK: - Initialization
     init() {
+        setupAudioSession()
         restoreStateIfNeeded()
+    }
+    
+    // MARK: - Audio Session Setup
+    
+    private func setupAudioSession() {
+        do {
+            let audioSession = AVAudioSession.sharedInstance()
+            try audioSession.setCategory(.playback, mode: .default, options: .duckOthers)
+            try audioSession.setActive(true, options: .notifyOthersOnDeactivation)
+        } catch {
+            print("Audio session setup error: \(error.localizedDescription)")
+        }
+    }
+    
+    private func startBackgroundAudio() {
+        guard let url = Bundle.main.url(forResource: "silence", withExtension: "mp3") else {
+            // Create silent audio if file doesn't exist
+            createAndPlaySilentAudio()
+            return
+        }
+        
+        do {
+            audioPlayer = try AVAudioPlayer(contentsOf: url)
+            audioPlayer?.numberOfLoops = -1
+            audioPlayer?.volume = 0
+            audioPlayer?.play()
+        } catch {
+            print("Audio playback error: \(error.localizedDescription)")
+            createAndPlaySilentAudio()
+        }
+    }
+    
+    private func createAndPlaySilentAudio() {
+        do {
+            let audioSession = AVAudioSession.sharedInstance()
+            try audioSession.setCategory(.playback, mode: .default, options: [.duckOthers, .mixWithOthers])
+            try audioSession.setActive(true)
+            
+            // Create silent audio buffer using AVAudioEngine
+            audioEngine = AVAudioEngine()
+            playerNode = AVAudioPlayerNode()
+            
+            guard let audioEngine = audioEngine, let playerNode = playerNode else { return }
+            
+            // Create audio format (1 second of silence)
+            let format = AVAudioFormat(standardFormatWithSampleRate: 44100, channels: 2)
+            let buffer = AVAudioPCMBuffer(pcmFormat: format!, frameCapacity: 44100)
+            buffer?.frameLength = 44100
+            
+            // Fill buffer with silence (zeros)
+            if let channelData = buffer?.floatChannelData {
+                for channel in 0..<Int(format!.channelCount) {
+                    memset(channelData[channel], 0, Int(buffer!.frameCapacity) * MemoryLayout<Float>.size)
+                }
+            }
+            
+            audioEngine.attach(playerNode)
+            audioEngine.connect(playerNode, to: audioEngine.mainMixerNode, format: format)
+            
+            try audioEngine.start()
+            playerNode.scheduleBuffer(buffer!, at: nil, options: .loops, completionHandler: nil)
+            playerNode.play()
+            
+        } catch {
+            print("Silent audio setup error: \(error.localizedDescription)")
+        }
+    }
+    
+    private func stopBackgroundAudio() {
+        audioPlayer?.stop()
+        audioPlayer = nil
+        
+        playerNode?.stop()
+        audioEngine?.stop()
+        playerNode = nil
+        audioEngine = nil
     }
     
     // MARK: - Public Methods
@@ -65,6 +146,9 @@ final class PomodoroManager {
         // Schedule local notification
         scheduleCompletionNotification(duration: duration)
         
+        // Start background audio to keep app alive
+        startBackgroundAudio()
+        
         // Start UI update timer (only for foreground)
         startUIUpdateTimer()
     }
@@ -74,6 +158,9 @@ final class PomodoroManager {
         timer?.invalidate()
         timer = nil
         isRunning = false
+        
+        // Stop background audio
+        stopBackgroundAudio()
         
         // Clear UserDefaults
         defaults.removeObject(forKey: startDateKey)
@@ -137,6 +224,9 @@ final class PomodoroManager {
             
             isRunning = true
             remainingTime = endDate.timeIntervalSince(now)
+            
+            // Restart background audio
+            startBackgroundAudio()
             
             // Start UI update timer
             startUIUpdateTimer()
