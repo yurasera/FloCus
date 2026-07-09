@@ -9,6 +9,7 @@ import SwiftUI
 import SwiftData
 import UserNotifications
 import AVFoundation
+import ActivityKit
 
 @Observable
 final class PomodoroManager {
@@ -23,6 +24,7 @@ final class PomodoroManager {
     private var audioPlayer: AVAudioPlayer?
     private var audioEngine: AVAudioEngine?
     private var playerNode: AVAudioPlayerNode?
+    private var liveActivity: Activity<PomodoroAttributes>?
     
     // MARK: - Keys for UserDefaults
     private let startDateKey = "pomodoroStartDate"
@@ -145,6 +147,7 @@ final class PomodoroManager {
         
         // Schedule local notification
         scheduleCompletionNotification(duration: duration)
+        startLiveActivity(task: task, startDate: now, endDate: endDate, duration: duration)
         
         // Start background audio to keep app alive
         startBackgroundAudio()
@@ -161,6 +164,7 @@ final class PomodoroManager {
         
         // Stop background audio
         stopBackgroundAudio()
+        endLiveActivity(state: .paused)
         
         // Clear UserDefaults
         defaults.removeObject(forKey: startDateKey)
@@ -175,9 +179,11 @@ final class PomodoroManager {
     
     /// Complete Pomodoro session
     func completePomodoro() {
+        let finishedTask = currentTask
+        endLiveActivity(state: .finished)
         stopPomodoro()
         
-        if let task = currentTask {
+        if let task = finishedTask {
             task.status = .completed
             task.completedAt = .now
             try? task.modelContext?.save()
@@ -224,6 +230,7 @@ final class PomodoroManager {
             
             isRunning = true
             remainingTime = endDate.timeIntervalSince(now)
+            updateLiveActivity(state: .running)
             
             // Restart background audio
             startBackgroundAudio()
@@ -247,10 +254,101 @@ final class PomodoroManager {
             triggerCompletionHaptic()
         } else {
             remainingTime = remaining
+            updateLiveActivity(state: .running)
         }
     }
     
     // MARK: - Private Methods
+
+    private func startLiveActivity(task: Task, startDate: Date, endDate: Date, duration: TimeInterval) {
+        guard ActivityAuthorizationInfo().areActivitiesEnabled else { return }
+
+        let attributes = PomodoroAttributes(
+            taskId: String(task.persistentModelID.hashValue),
+            taskTitle: task.title,
+            taskCategory: task.category?.name
+        )
+        let state = PomodoroAttributes.ContentState(
+            sessionName: sessionName(for: duration),
+            remainingTime: max(0, endDate.timeIntervalSince(.now)),
+            totalDuration: duration,
+            startDate: startDate,
+            endDate: endDate,
+            progress: progress(startDate: startDate, endDate: endDate),
+            state: .running
+        )
+
+        do {
+            liveActivity = try Activity.request(
+                attributes: attributes,
+                content: ActivityContent(state: state, staleDate: endDate),
+                pushType: nil
+            )
+        } catch {
+            print("Live Activity start error: \(error.localizedDescription)")
+        }
+    }
+
+    private func updateLiveActivity(state: PomodoroSessionState) {
+        guard let liveActivity,
+              let startDate = defaults.object(forKey: startDateKey) as? Date,
+              let endDate = defaults.object(forKey: endDateKey) as? Date,
+              let duration = defaults.object(forKey: durationKey) as? TimeInterval else { return }
+
+        let contentState = PomodoroAttributes.ContentState(
+            sessionName: sessionName(for: duration),
+            remainingTime: max(0, endDate.timeIntervalSince(.now)),
+            totalDuration: duration,
+            startDate: startDate,
+            endDate: endDate,
+            progress: progress(startDate: startDate, endDate: endDate),
+            state: state
+        )
+
+        _Concurrency.Task { @MainActor in
+            await liveActivity.update(ActivityContent(state: contentState, staleDate: endDate))
+        }
+    }
+
+    private func endLiveActivity(state: PomodoroSessionState) {
+        guard let liveActivity else { return }
+
+        let now = Date()
+        let duration = defaults.object(forKey: durationKey) as? TimeInterval ?? defaultDuration
+        let contentState = PomodoroAttributes.ContentState(
+            sessionName: sessionName(for: duration),
+            remainingTime: 0,
+            totalDuration: duration,
+            startDate: now,
+            endDate: now,
+            progress: 1,
+            state: state
+        )
+
+        _Concurrency.Task { @MainActor in
+            await liveActivity.end(ActivityContent(state: contentState, staleDate: nil), dismissalPolicy: .default)
+        }
+
+        self.liveActivity = nil
+    }
+
+    private func sessionName(for duration: TimeInterval) -> String {
+        switch Int(duration / 60) {
+        case 5:
+            return "Short Break"
+        case 15:
+            return "Long Break"
+        default:
+            return "Focus"
+        }
+    }
+
+    private func progress(startDate: Date, endDate: Date) -> Double {
+        let duration = endDate.timeIntervalSince(startDate)
+        guard duration > 0 else { return 1 }
+        let elapsed = Date().timeIntervalSince(startDate)
+        return min(max(elapsed / duration, 0), 1)
+    }
     
     private func startUIUpdateTimer() {
         timer?.invalidate()

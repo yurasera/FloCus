@@ -7,10 +7,40 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4D0E5A882FFF3B0300CAAB8B /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D0E5A872FFF3B0300CAAB8B /* WidgetKit.framework */; };
+		4D0E5A8A2FFF3B0300CAAB8B /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D0E5A892FFF3B0300CAAB8B /* SwiftUI.framework */; };
+		4D0E5A9B2FFF3B0300CAAB8B /* FlocusPomodoroWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 4D0E5A852FFF3B0300CAAB8B /* FlocusPomodoroWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		4D2DC3FC2FEB7C8D008239B7 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 4D2DC3FB2FEB7C8D008239B7 /* README.md */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		4D0E5A992FFF3B0300CAAB8B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4DA34FA32FEAD0E900ED3B16 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4D0E5A842FFF3B0300CAAB8B;
+			remoteInfo = FlocusPomodoroWidgetExtension;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		4D0E5AA02FFF3B0300CAAB8B /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				4D0E5A9B2FFF3B0300CAAB8B /* FlocusPomodoroWidgetExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		4D0E5A852FFF3B0300CAAB8B /* FlocusPomodoroWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = FlocusPomodoroWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		4D0E5A872FFF3B0300CAAB8B /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		4D0E5A892FFF3B0300CAAB8B /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		4D2DC3FB2FEB7C8D008239B7 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		4DA34FAB2FEAD0EA00ED3B16 /* Flocus.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Flocus.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -22,6 +52,13 @@
 				Info.plist,
 			);
 			target = 4DA34FAA2FEAD0EA00ED3B16 /* Flocus */;
+		};
+		4D0E5A9F2FFF3B0300CAAB8B /* Exceptions for "FlocusPomodoroWidget" folder in "FlocusPomodoroWidgetExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 4D0E5A842FFF3B0300CAAB8B /* FlocusPomodoroWidgetExtension */;
 		};
 		4D64E12E2FF4C2410073CE4B /* Exceptions for "Docs" folder in "Flocus" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
@@ -43,6 +80,14 @@
 /* End PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		4D0E5A8B2FFF3B0300CAAB8B /* FlocusPomodoroWidget */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				4D0E5A9F2FFF3B0300CAAB8B /* Exceptions for "FlocusPomodoroWidget" folder in "FlocusPomodoroWidgetExtension" target */,
+			);
+			path = FlocusPomodoroWidget;
+			sourceTree = "<group>";
+		};
 		4D2DC4032FEB7F72008239B7 /* Screenshots */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = Screenshots;
@@ -68,6 +113,15 @@
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		4D0E5A822FFF3B0300CAAB8B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4D0E5A8A2FFF3B0300CAAB8B /* SwiftUI.framework in Frameworks */,
+				4D0E5A882FFF3B0300CAAB8B /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		4DA34FA82FEAD0EA00ED3B16 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -78,6 +132,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4D0E5A862FFF3B0300CAAB8B /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				4D0E5A872FFF3B0300CAAB8B /* WidgetKit.framework */,
+				4D0E5A892FFF3B0300CAAB8B /* SwiftUI.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		4DA34FA22FEAD0E900ED3B16 = {
 			isa = PBXGroup;
 			children = (
@@ -85,6 +148,8 @@
 				4D2DC3FB2FEB7C8D008239B7 /* README.md */,
 				4D2DC4032FEB7F72008239B7 /* Screenshots */,
 				4D64E12C2FF4C2400073CE4B /* Docs */,
+				4D0E5A8B2FFF3B0300CAAB8B /* FlocusPomodoroWidget */,
+				4D0E5A862FFF3B0300CAAB8B /* Frameworks */,
 				4DA34FAC2FEAD0EA00ED3B16 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -93,6 +158,7 @@
 			isa = PBXGroup;
 			children = (
 				4DA34FAB2FEAD0EA00ED3B16 /* Flocus.app */,
+				4D0E5A852FFF3B0300CAAB8B /* FlocusPomodoroWidgetExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -100,6 +166,28 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		4D0E5A842FFF3B0300CAAB8B /* FlocusPomodoroWidgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4D0E5A9C2FFF3B0300CAAB8B /* Build configuration list for PBXNativeTarget "FlocusPomodoroWidgetExtension" */;
+			buildPhases = (
+				4D0E5A812FFF3B0300CAAB8B /* Sources */,
+				4D0E5A822FFF3B0300CAAB8B /* Frameworks */,
+				4D0E5A832FFF3B0300CAAB8B /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				4D0E5A8B2FFF3B0300CAAB8B /* FlocusPomodoroWidget */,
+			);
+			name = FlocusPomodoroWidgetExtension;
+			packageProductDependencies = (
+			);
+			productName = FlocusPomodoroWidgetExtension;
+			productReference = 4D0E5A852FFF3B0300CAAB8B /* FlocusPomodoroWidgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		4DA34FAA2FEAD0EA00ED3B16 /* Flocus */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 4DA34FB62FEAD0EA00ED3B16 /* Build configuration list for PBXNativeTarget "Flocus" */;
@@ -107,10 +195,12 @@
 				4DA34FA72FEAD0EA00ED3B16 /* Sources */,
 				4DA34FA82FEAD0EA00ED3B16 /* Frameworks */,
 				4DA34FA92FEAD0EA00ED3B16 /* Resources */,
+				4D0E5AA02FFF3B0300CAAB8B /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				4D0E5A9A2FFF3B0300CAAB8B /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				4D2DC4032FEB7F72008239B7 /* Screenshots */,
@@ -131,9 +221,12 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 2650;
+				LastSwiftUpdateCheck = 2660;
 				LastUpgradeCheck = 2650;
 				TargetAttributes = {
+					4D0E5A842FFF3B0300CAAB8B = {
+						CreatedOnToolsVersion = 26.6;
+					};
 					4DA34FAA2FEAD0EA00ED3B16 = {
 						CreatedOnToolsVersion = 26.5;
 					};
@@ -154,11 +247,19 @@
 			projectRoot = "";
 			targets = (
 				4DA34FAA2FEAD0EA00ED3B16 /* Flocus */,
+				4D0E5A842FFF3B0300CAAB8B /* FlocusPomodoroWidgetExtension */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		4D0E5A832FFF3B0300CAAB8B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		4DA34FA92FEAD0EA00ED3B16 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -170,6 +271,13 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		4D0E5A812FFF3B0300CAAB8B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		4DA34FA72FEAD0EA00ED3B16 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -179,7 +287,75 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		4D0E5A9A2FFF3B0300CAAB8B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4D0E5A842FFF3B0300CAAB8B /* FlocusPomodoroWidgetExtension */;
+			targetProxy = 4D0E5A992FFF3B0300CAAB8B /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		4D0E5A9D2FFF3B0300CAAB8B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 6K98GXCG5L;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = FlocusPomodoroWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = FlocusPomodoroWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.flosera.Flocus.FlocusPomodoroWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		4D0E5A9E2FFF3B0300CAAB8B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 6K98GXCG5L;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = FlocusPomodoroWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = FlocusPomodoroWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.flosera.Flocus.FlocusPomodoroWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		4DA34FB42FEAD0EA00ED3B16 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -370,6 +546,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		4D0E5A9C2FFF3B0300CAAB8B /* Build configuration list for PBXNativeTarget "FlocusPomodoroWidgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4D0E5A9D2FFF3B0300CAAB8B /* Debug */,
+				4D0E5A9E2FFF3B0300CAAB8B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		4DA34FA62FEAD0EA00ED3B16 /* Build configuration list for PBXProject "Flocus" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

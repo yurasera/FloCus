@@ -9,72 +9,123 @@ import ActivityKit
 import WidgetKit
 import SwiftUI
 
-struct FlocusPomodoroWidgetAttributes: ActivityAttributes {
-    public struct ContentState: Codable, Hashable {
-        // Dynamic stateful properties about your activity go here!
-        var emoji: String
-    }
-
-    // Fixed non-changing properties about your activity go here!
-    var name: String
-}
-
 struct FlocusPomodoroWidgetLiveActivity: Widget {
     var body: some WidgetConfiguration {
-        ActivityConfiguration(for: FlocusPomodoroWidgetAttributes.self) { context in
-            // Lock screen/banner UI goes here
-            VStack {
-                Text("Hello \(context.state.emoji)")
-            }
-            .activityBackgroundTint(Color.cyan)
-            .activitySystemActionForegroundColor(Color.black)
-
+        ActivityConfiguration(for: PomodoroAttributes.self) { context in
+            PomodoroLockScreenView(context: context)
+                .activityBackgroundTint(.black.opacity(0.92))
+                .activitySystemActionForegroundColor(.white)
         } dynamicIsland: { context in
             DynamicIsland {
-                // Expanded UI goes here.  Compose the expanded UI through
-                // various regions, like leading/trailing/center/bottom
                 DynamicIslandExpandedRegion(.leading) {
-                    Text("Leading")
+                    Label(context.state.sessionName, systemImage: "timer")
+                        .font(.caption.weight(.semibold))
                 }
+
+                DynamicIslandExpandedRegion(.center) {
+                    VStack(spacing: 6) {
+                        Text(timerInterval: Date.now...context.state.endDate, countsDown: true)
+                            .font(.system(size: 34, weight: .bold, design: .monospaced))
+                            .minimumScaleFactor(0.7)
+
+                        ProgressView(value: context.state.progress)
+                            .tint(.red)
+                    }
+                }
+
                 DynamicIslandExpandedRegion(.trailing) {
-                    Text("Trailing")
+                    PomodoroStatusPill(state: context.state.state)
                 }
+
                 DynamicIslandExpandedRegion(.bottom) {
-                    Text("Bottom \(context.state.emoji)")
-                    // more content
+                    VStack(spacing: 8) {
+                        Text(context.attributes.taskTitle)
+                            .font(.headline)
+                            .lineLimit(1)
+
+                        HStack {
+                            Text(timerInterval: Date.now...context.state.endDate, countsDown: true)
+                                .font(.caption.monospacedDigit())
+                            Spacer()
+                            Text(progressText(context.state.progress))
+                                .font(.caption.weight(.semibold))
+                        }
+
+                        ProgressView(value: context.state.progress)
+                            .tint(.red)
+                    }
+                    .padding(.top, 4)
                 }
             } compactLeading: {
-                Text("L")
+                Text("🍅")
             } compactTrailing: {
-                Text("T \(context.state.emoji)")
+                Text(timerInterval: Date.now...context.state.endDate, countsDown: true)
+                    .font(.caption2.monospacedDigit())
+                    .frame(width: 48)
             } minimal: {
-                Text(context.state.emoji)
+                Text("🍅")
             }
-            .widgetURL(URL(string: "http://www.apple.com"))
-            .keylineTint(Color.red)
         }
     }
 }
 
-extension FlocusPomodoroWidgetAttributes {
-    fileprivate static var preview: FlocusPomodoroWidgetAttributes {
-        FlocusPomodoroWidgetAttributes(name: "World")
+private struct PomodoroLockScreenView: View {
+    let context: ActivityViewContext<PomodoroAttributes>
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(context.state.sessionName)
+                        .font(.headline)
+                    Text(context.attributes.taskTitle)
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                }
+
+                Spacer()
+
+                PomodoroStatusPill(state: context.state.state)
+            }
+
+            Text(timerInterval: Date.now...context.state.endDate, countsDown: true)
+                .font(.system(size: 40, weight: .bold, design: .monospaced))
+                .contentTransition(.numericText())
+
+            ProgressView(value: context.state.progress)
+                .tint(.red)
+        }
+        .padding()
     }
 }
 
-extension FlocusPomodoroWidgetAttributes.ContentState {
-    fileprivate static var smiley: FlocusPomodoroWidgetAttributes.ContentState {
-        FlocusPomodoroWidgetAttributes.ContentState(emoji: "😀")
-     }
-     
-     fileprivate static var starEyes: FlocusPomodoroWidgetAttributes.ContentState {
-         FlocusPomodoroWidgetAttributes.ContentState(emoji: "🤩")
-     }
+private struct PomodoroStatusPill: View {
+    let state: PomodoroSessionState
+
+    var body: some View {
+        Text(title)
+            .font(.caption.weight(.semibold))
+            .padding(.horizontal, 10)
+            .padding(.vertical, 6)
+            .background(.white.opacity(0.15), in: Capsule())
+    }
+
+    private var title: String {
+        switch state {
+        case .running: return "Running"
+        case .paused: return "Paused"
+        case .finished: return "Finished"
+        }
+    }
 }
 
-#Preview("Notification", as: .content, using: FlocusPomodoroWidgetAttributes.preview) {
+private func progressText(_ progress: Double) -> String {
+    "\(Int(progress * 100))%"
+}
+
+#Preview("Notification", as: .content, using: PomodoroAttributes(taskId: "1", taskTitle: "Design Sprint", taskCategory: "Focus")) {
    FlocusPomodoroWidgetLiveActivity()
 } contentStates: {
-    FlocusPomodoroWidgetAttributes.ContentState.smiley
-    FlocusPomodoroWidgetAttributes.ContentState.starEyes
+    PomodoroAttributes.ContentState(sessionName: "Focus", remainingTime: 1500, totalDuration: 1500, startDate: .now, endDate: .now.addingTimeInterval(1500), progress: 0.25, state: .running)
+    PomodoroAttributes.ContentState(sessionName: "Short Break", remainingTime: 300, totalDuration: 300, startDate: .now, endDate: .now.addingTimeInterval(300), progress: 0.5, state: .paused)
 }

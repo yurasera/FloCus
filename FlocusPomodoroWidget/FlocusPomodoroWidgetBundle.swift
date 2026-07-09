@@ -12,7 +12,6 @@ import SwiftUI
 struct FlocusPomodoroWidgetBundle: WidgetBundle {
     var body: some Widget {
         FlocusPomodoroWidget()
-        FlocusPomodoroWidgetControl()
         FlocusPomodoroWidgetLiveActivity()
     }
 }
