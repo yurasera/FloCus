@@ -13,6 +13,9 @@ struct ContentView: View {
     @Query private var categories: [Category]
     @Query(sort: \Task.priorityOrder) private var tasks: [Task]
     @State private var isPresentingPriorityTasks = false
+    @State private var isLearnVisible: Bool = true
+    @State private var isProjectsVisible: Bool = true
+    @State private var isHobbiesVisible: Bool = true
 
     var body: some View {
         let learnTasks = tasks.filter {
@@ -38,14 +41,27 @@ struct ContentView: View {
                     // Kiri: 3 bagian vertikal
                     VStack(spacing: 0) {
                         HeroSection(categories: categories)
-                        CategorySection(category: .learn, tasks: learnTasks)
-                        StatusSection()
+                        if isLearnVisible {
+                            CategorySection(category: .learn, tasks: learnTasks)
+                        }
+                        StatusSection(
+                            learnCount: learnTasks.count,
+                            projectsCount: projectTasks.count,
+                            hobbiesCount: hobbyTasks.count,
+                            isLearnVisible: $isLearnVisible,
+                            isProjectsVisible: $isProjectsVisible,
+                            isHobbiesVisible: $isHobbiesVisible
+                        )
                     }
                     
                     // Kanan: 2 bagian vertikal
                     VStack(spacing: 0) {
-                        CategorySection(category: .projects, tasks: projectTasks)
-                        CategorySection(category: .hobbies, tasks: hobbyTasks)
+                        if isProjectsVisible {
+                            CategorySection(category: .projects, tasks: projectTasks)
+                        }
+                        if isHobbiesVisible {
+                            CategorySection(category: .hobbies, tasks: hobbyTasks)
+                        }
                     }
                 }
                 HStack(spacing: 0) {
@@ -141,4 +157,3 @@ struct ContentView: View {
 #Preview {
     ContentView()
 }
-
