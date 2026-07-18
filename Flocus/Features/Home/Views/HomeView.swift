@@ -12,62 +12,42 @@ struct HomeView: View {
     @Environment(\.modelContext) private var modelContext
     @Query private var categories: [Category]
     @Query(sort: \Task.priorityOrder) private var tasks: [Task]
-    @State private var isPresentingPriorityTasks = false
-    @State private var isLearnVisible: Bool = true
-    @State private var isProjectsVisible: Bool = true
-    @State private var isHobbiesVisible: Bool = true
+    
+    @State private var viewModel = HomeViewModel()
 
     var body: some View {
-        let learnTasks = tasks.filter {
-            $0.category?.name == CategoryKind.learn.title &&
-            $0.status != .archive
-        }
-
-        let projectTasks = tasks.filter {
-            $0.category?.name == CategoryKind.projects.title &&
-            $0.status != .archive
-        }
-
-        let hobbyTasks = tasks.filter {
-            $0.category?.name == CategoryKind.hobbies.title &&
-            $0.status != .archive
-        }
-        
         VStack(spacing: 0) {
-            if let focusTask {
+            if let focusTask = viewModel.focusTask(from: tasks) {
                 FocusView(task: focusTask, stopFocus: stopFocus)
             } else {
                 HStack(spacing: 0) {
-                    // Kiri: 3 bagian vertikal
                     VStack(spacing: 0) {
                         HeroSection(categories: categories)
-                        if isLearnVisible {
-                            CategorySection(category: .learn, tasks: learnTasks)
+                        if viewModel.isLearnVisible {
+                            CategorySection(category: .learn, tasks: viewModel.learnTasks(from: tasks))
                         }
                         StatusSection(
-                            learnCount: learnTasks.count,
-                            projectsCount: projectTasks.count,
-                            hobbiesCount: hobbyTasks.count,
-                            isLearnVisible: $isLearnVisible,
-                            isProjectsVisible: $isProjectsVisible,
-                            isHobbiesVisible: $isHobbiesVisible
+                            learnCount: viewModel.learnTasks(from: tasks).count,
+                            projectsCount: viewModel.projectTasks(from: tasks).count,
+                            hobbiesCount: viewModel.hobbyTasks(from: tasks).count,
+                            isLearnVisible: $viewModel.isLearnVisible,
+                            isProjectsVisible: $viewModel.isProjectsVisible,
+                            isHobbiesVisible: $viewModel.isHobbiesVisible
                         )
                     }
-                    
-                    // Kanan: 2 bagian vertikal
                     VStack(spacing: 0) {
-                        if isProjectsVisible {
-                            CategorySection(category: .projects, tasks: projectTasks)
+                        if viewModel.isProjectsVisible {
+                            CategorySection(category: .projects, tasks: viewModel.projectTasks(from: tasks))
                         }
-                        if isHobbiesVisible {
-                            CategorySection(category: .hobbies, tasks: hobbyTasks)
+                        if viewModel.isHobbiesVisible {
+                            CategorySection(category: .hobbies, tasks: viewModel.hobbyTasks(from: tasks))
                         }
                     }
                 }
                 HStack(spacing: 0) {
                     VStack(spacing: 0) {
                         Button {
-                            isPresentingPriorityTasks = true
+                            viewModel.isPresentingPriorityTasks = true
                         } label: {
                             HStack {
                                 Image(systemName: "flag.fill")
@@ -88,7 +68,7 @@ struct HomeView: View {
                     
                     VStack(spacing: 0) {
                         Button {
-                            startFocus()
+                            viewModel.startFocus(tasks: tasks)
                         } label: {
                             HStack {
                                 Image(systemName: "timer")
@@ -110,47 +90,16 @@ struct HomeView: View {
             }
         }
         .ignoresSafeArea()
-        .sheet(isPresented: $isPresentingPriorityTasks) {
+        .sheet(isPresented: $viewModel.isPresentingPriorityTasks) {
             PriorityView(tasks: tasks)
         }
-    }
-
-    private var focusTask: Task? {
-        tasks.first { $0.status == .focus }
-    }
-
-    private func startFocus() {
-        guard let priorityTask = tasks.first(where: { $0.status == .backlog }) else {
-            return
+        .onAppear {
+            viewModel.setContext(modelContext)
         }
-
-        for task in tasks {
-            switch task.status {
-            case .completed:
-                break
-
-            case .focus:
-                task.status = .backlog
-                task.focusStartedAt = nil
-
-            case .backlog:
-                break
-
-            case .archive:
-                break
-            }
-        }
-
-        priorityTask.status = .focus
-        priorityTask.focusStartedAt = .now
-
-        try? modelContext.save()
     }
 
     private func stopFocus() {
-        focusTask?.status = .backlog
-        focusTask?.focusStartedAt = nil
-        try? modelContext.save()
+        viewModel.stopFocus(tasks: tasks)
     }
 }
 

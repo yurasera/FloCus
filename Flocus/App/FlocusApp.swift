@@ -42,8 +42,6 @@ struct FlocusApp: App {
             pomodoroManager.restoreStateIfNeeded()
         case .background:
             pomodoroManager.saveStateWhenEnteringBackground()
-        case .inactive:
-            <#code#>
         @unknown default:
             break
         }
