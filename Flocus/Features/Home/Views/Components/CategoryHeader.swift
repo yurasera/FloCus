@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct CategoryHeader: View {
+struct HomeCategoryHeader: View {
     let title: String
     let color: Color
     let action: () -> Void

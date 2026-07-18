@@ -6,7 +6,7 @@
 //
 import SwiftUI
 
-struct StatusSection: View {
+struct HomeStatusSection: View {
     let learnCount: Int
     let projectsCount: Int
     let hobbiesCount: Int
@@ -40,7 +40,7 @@ struct StatusSection: View {
                     Button {
                         withAnimation(.snappy) { isLearnVisible.toggle() }
                     } label: {
-                        StatusBadge(color: Color.brandPrimary, count: learnCount)
+                        HomeStatusBadge(color: Color.brandPrimary, count: learnCount)
                     }
                     .buttonStyle(.plain)
 
@@ -48,7 +48,7 @@ struct StatusSection: View {
                     Button {
                         withAnimation(.snappy) { isProjectsVisible.toggle() }
                     } label: {
-                        StatusBadge(color: Color.brandSecondary, count: projectsCount)
+                        HomeStatusBadge(color: Color.brandSecondary, count: projectsCount)
                     }
                     .buttonStyle(.plain)
 
@@ -56,7 +56,7 @@ struct StatusSection: View {
                     Button {
                         withAnimation(.snappy) { isHobbiesVisible.toggle() }
                     } label: {
-                        StatusBadge(color: Color.brandTertiary, count: hobbiesCount)
+                        HomeStatusBadge(color: Color.brandTertiary, count: hobbiesCount)
                     }
                     .buttonStyle(.plain)
                 }

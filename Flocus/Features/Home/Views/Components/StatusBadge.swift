@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct StatusBadge: View {
+struct HomeStatusBadge: View {
 
     let color: Color
     let count: Int

@@ -22,11 +22,11 @@ struct HomeDashboard: View {
         HStack(spacing: 0) {
             // Left side: 3 vertical sections
             VStack(spacing: 0) {
-                HeroSection(categories: categories)
+                HomeHeroSection(categories: categories)
                 if isLearnVisible {
-                    CategorySection(category: .learn, tasks: learnTasks)
+                    HomeCategorySection(category: .learn, tasks: learnTasks)
                 }
-                StatusSection(
+                HomeStatusSection(
                     learnCount: learnTasks.count,
                     projectsCount: projectTasks.count,
                     hobbiesCount: hobbyTasks.count,
@@ -39,10 +39,10 @@ struct HomeDashboard: View {
             // Right side: 2 vertical sections
             VStack(spacing: 0) {
                 if isProjectsVisible {
-                    CategorySection(category: .projects, tasks: projectTasks)
+                    HomeCategorySection(category: .projects, tasks: projectTasks)
                 }
                 if isHobbiesVisible {
-                    CategorySection(category: .hobbies, tasks: hobbyTasks)
+                    HomeCategorySection(category: .hobbies, tasks: hobbyTasks)
                 }
             }
         }

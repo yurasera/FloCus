@@ -44,14 +44,14 @@ enum CategoryKind {
         let limited = Array(tasks.prefix(2))
         if limited.isEmpty {
             // Show two empty placeholder cards when there is no data
-                CategoryCard(
+                HomeCategoryCard(
                 title: "",
                 description: "",
                 background: headerColor,
                 foreground: backgroundColor,
                 task: nil
             )
-                CategoryCard(
+                HomeCategoryCard(
                 title: "",
                 description: "",
                 background: headerColor,
@@ -60,7 +60,7 @@ enum CategoryKind {
             )
         } else {
             ForEach(limited) { task in
-                    CategoryCard(
+                    HomeCategoryCard(
                     title: task.title,
                     description: task.notes,
                     background: headerColor,

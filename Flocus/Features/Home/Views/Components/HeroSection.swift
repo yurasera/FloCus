@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct HeroSection: View {
+struct HomeHeroSection: View {
     let categories: [Category]
     var body: some View {
         VStack {

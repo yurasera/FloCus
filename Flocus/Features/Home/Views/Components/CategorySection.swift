@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct CategorySection: View {
+struct HomeCategorySection: View {
     let category: CategoryKind
     let tasks: [Task]
     @State private var isPresentingAddTask = false
@@ -16,7 +16,7 @@ struct CategorySection: View {
         VStack {
             Spacer()
             VStack(alignment: .leading, spacing: Spacing.small) {
-                CategoryHeader(title: category.title, color: category.headerColor) {
+                HomeCategoryHeader(title: category.title, color: category.headerColor) {
                     isPresentingAddTask = true
                 }
                 category.cards(for: tasks)
@@ -28,7 +28,7 @@ struct CategorySection: View {
         .frame(maxWidth: .infinity)
         .background(category.backgroundColor)
         .sheet(isPresented: $isPresentingAddTask) {
-            AddTaskSheet(category: category)
+            HomeAddTaskSheet(category: category)
         }
     }
 }

@@ -9,7 +9,7 @@ import SwiftUI
 import SwiftData
 import OSLog
 
-struct CategoryCard: View {
+struct HomeCategoryCard: View {
     let title: String
     let description: String
     let background: Color
