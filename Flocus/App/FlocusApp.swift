@@ -29,7 +29,7 @@ struct FlocusApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            HomeView()
                 .environment(pomodoroManager)
         }
         .modelContainer(container)
