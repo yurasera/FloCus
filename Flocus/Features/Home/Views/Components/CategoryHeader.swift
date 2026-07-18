@@ -1,5 +1,5 @@
 //
-//  SectionHeader.swift
+//  CategoryHeader.swift
 //  Flocus
 //
 //  Created by Yuhaya Lissera on 24/06/26.
@@ -7,13 +7,13 @@
 
 import SwiftUI
 
-struct SectionHeader: View {
+struct CategoryHeader: View {
     let title: String
     let color: Color
     let action: () -> Void
     
     var body: some View {
-        HStack(){
+        HStack {
             Text(title)
                 .font(.title)
                 .fontWeight(.bold)
@@ -25,7 +25,7 @@ struct SectionHeader: View {
                 Image(systemName: "plus.circle.fill")
                     .font(.title3)
                     .foregroundStyle(color)
-                    .accessibilityLabel("Add Learn Item")
+                    .accessibilityLabel("Add \(title) Item")
             }
         }
     }

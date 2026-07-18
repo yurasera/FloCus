@@ -6,20 +6,19 @@
 //
 
 import SwiftUI
-import SwiftData
 
 struct CategorySection: View {
     let category: CategoryKind
     let tasks: [Task]
     @State private var isPresentingAddTask = false
     
-    private var headerAction: () -> Void { { isPresentingAddTask = true } }
-
     var body: some View {
         VStack {
             Spacer()
             VStack(alignment: .leading, spacing: Spacing.small) {
-                SectionHeader(title: category.title, color: category.headerColor, action: headerAction)
+                CategoryHeader(title: category.title, color: category.headerColor) {
+                    isPresentingAddTask = true
+                }
                 category.cards(for: tasks)
             }
             .foregroundColor(.white)

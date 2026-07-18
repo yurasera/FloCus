@@ -1,5 +1,5 @@
 //
-//  LearnCard.swift
+//  CategoryCard.swift
 //  Flocus
 //
 //  Created by Yuhaya Lissera on 24/06/26.
@@ -7,8 +7,9 @@
 
 import SwiftUI
 import SwiftData
+import OSLog
 
-struct LearnCard: View {
+struct CategoryCard: View {
     let title: String
     let description: String
     let background: Color
@@ -16,9 +17,10 @@ struct LearnCard: View {
     var task: Task?
     
     @Environment(\.modelContext) private var modelContext
+    
+    private static let logger = Logger(subsystem: "com.yuhayalissera.Flocus", category: "CategoryCard")
 
     var body: some View {
-        let isCompleted = task?.status == .completed
         VStack(alignment: .leading, spacing: Spacing.small) {
 
             HStack {
@@ -51,24 +53,37 @@ struct LearnCard: View {
                     : background
                 )
         )
-        .foregroundStyle(
-            isCompleted
-            ? foreground
-            : foreground
-        )
+        .foregroundStyle(foreground)
         .onTapGesture {
-            withAnimation(.spring) {
-                if let task = task {
-                    if task.status == .completed {
-                        task.status = .backlog
-                        task.completedAt = nil
-                    } else {
-                        task.status = .completed
-                        task.completedAt = .now
-                    }
-                    try? modelContext.save()
-                }
+            toggleTaskCompletion()
+        }
+    }
+    
+    private var isCompleted: Bool {
+        task?.status == .completed
+    }
+    
+    private func toggleTaskCompletion() {
+        guard let task = task else { return }
+        
+        withAnimation(.spring) {
+            if task.status == .completed {
+                task.status = .backlog
+                task.completedAt = nil
+            } else {
+                task.status = .completed
+                task.completedAt = .now
             }
+            
+            saveChanges()
+        }
+    }
+    
+    private func saveChanges() {
+        do {
+            try modelContext.save()
+        } catch {
+            Self.logger.error("Failed to save task completion: \(error.localizedDescription)")
         }
     }
 }
