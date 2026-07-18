@@ -7,86 +7,46 @@
 
 import SwiftUI
 import SwiftData
+import Observation
+import OSLog
 
 struct HomeView: View {
     @Environment(\.modelContext) private var modelContext
     @Query private var categories: [Category]
     @Query(sort: \Task.priorityOrder) private var tasks: [Task]
-    
-    @State private var viewModel = HomeViewModel()
+
+    @State private var viewModel: HomeViewModel
+
+    // Initialize ViewModel with modelContext
+    init(modelContext: ModelContext) {
+        _viewModel = State(wrappedValue: HomeViewModel(modelContext: modelContext))
+    }
+
+    // Preview initializer
+    init() {
+        // Provide a dummy ViewModel for previews
+        _viewModel = State(wrappedValue: HomeViewModel())
+    }
 
     var body: some View {
         VStack(spacing: 0) {
             if let focusTask = viewModel.focusTask(from: tasks) {
                 FocusView(task: focusTask, stopFocus: stopFocus)
             } else {
-                HStack(spacing: 0) {
-                    VStack(spacing: 0) {
-                        HeroSection(categories: categories)
-                        if viewModel.isLearnVisible {
-                            CategorySection(category: .learn, tasks: viewModel.learnTasks(from: tasks))
-                        }
-                        StatusSection(
-                            learnCount: viewModel.learnTasks(from: tasks).count,
-                            projectsCount: viewModel.projectTasks(from: tasks).count,
-                            hobbiesCount: viewModel.hobbyTasks(from: tasks).count,
-                            isLearnVisible: $viewModel.isLearnVisible,
-                            isProjectsVisible: $viewModel.isProjectsVisible,
-                            isHobbiesVisible: $viewModel.isHobbiesVisible
-                        )
-                    }
-                    VStack(spacing: 0) {
-                        if viewModel.isProjectsVisible {
-                            CategorySection(category: .projects, tasks: viewModel.projectTasks(from: tasks))
-                        }
-                        if viewModel.isHobbiesVisible {
-                            CategorySection(category: .hobbies, tasks: viewModel.hobbyTasks(from: tasks))
-                        }
-                    }
-                }
-                HStack(spacing: 0) {
-                    VStack(spacing: 0) {
-                        Button {
-                            viewModel.isPresentingPriorityTasks = true
-                        } label: {
-                            HStack {
-                                Image(systemName: "flag.fill")
-                                Text("Set Priority")
-                            }
-                            .font(.headline)
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 14)
-                            .foregroundStyle(Color.brandTertiary)
-                            .clipShape(RoundedRectangle(cornerRadius: 24))
-                            .glassEffect()
-                            .tint(Color.brandPrimary)
-                        }
-                        Spacer()
-                    }
-                    .padding(16)
-                    .background(Color.brandPrimary)
-                    
-                    VStack(spacing: 0) {
-                        Button {
-                            viewModel.startFocus(tasks: tasks)
-                        } label: {
-                            HStack {
-                                Image(systemName: "timer")
-                                Text("Start Focus")
-                            }
-                            .font(.headline)
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 14)
-                            .foregroundStyle(Color.brandSecondary)
-                            .clipShape(RoundedRectangle(cornerRadius: 24))
-                            .glassEffect()
-                        }
-                        Spacer()
-                    }
-                    .padding(16)
-                    .background(Color.brandTertiary)
-                }
-                .frame(height: 96)
+                HomeDashboard(
+                    categories: categories,
+                    learnTasks: viewModel.learnTasks(from: tasks),
+                    projectTasks: viewModel.projectTasks(from: tasks),
+                    hobbyTasks: viewModel.hobbyTasks(from: tasks),
+                    isLearnVisible: $viewModel.isLearnVisible,
+                    isProjectsVisible: $viewModel.isProjectsVisible,
+                    isHobbiesVisible: $viewModel.isHobbiesVisible
+                )
+
+                HomeActionBar(
+                    isPresentingPriorityTasks: $viewModel.isPresentingPriorityTasks,
+                    startFocusAction: { viewModel.startFocus(tasks: tasks) }
+                )
             }
         }
         .ignoresSafeArea()
@@ -104,5 +64,12 @@ struct HomeView: View {
 }
 
 #Preview {
-    HomeView()
+    // Provide a dummy modelContext for preview
+    let previewContainer: ModelContainer
+    do {
+        previewContainer = try ModelContainer(for: Category.self, Task.self)
+    } catch {
+        fatalError("Failed to create preview container")
+    }
+    return HomeView(modelContext: ModelContext(previewContainer))
 }
