@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import OSLog
 
 @main
 struct FlocusApp: App {
@@ -14,17 +15,17 @@ struct FlocusApp: App {
     
     @State private var pomodoroManager = PomodoroManager()
     @Environment(\.scenePhase) private var scenePhase
+    private static let logger = Logger(subsystem: "com.yuhayalissera.Flocus", category: "App")
 
     init() {
         do {
             container = try ModelContainer(for: Category.self, Task.self)
             try SeedData.seedCategories(in: ModelContext(container))
         } catch {
-            fatalError("Failed to initialize SwiftData container: \(error)")
+            Self.logger.critical("Failed to initialize SwiftData container: \(error)")
+            fatalError("Failed to initialize SwiftData container: \(error)") // Keep fatalError for unrecoverable startup failure
         }
         
-        // Request notification permission
-        requestNotificationPermission()
     }
 
     var body: some Scene {
@@ -33,39 +34,22 @@ struct FlocusApp: App {
                 .environment(pomodoroManager)
         }
         .modelContainer(container)
-        .onChange(of: scenePhase) { oldPhase, newPhase in
-            handleScenePhaseChange(oldPhase: oldPhase, newPhase: newPhase)
+        .onChange(of: scenePhase) { newPhase in
+            handleScenePhaseChange(newPhase: newPhase)
         }
     }
     
     // MARK: - Scene Phase Management
     
-    private func handleScenePhaseChange(oldPhase: ScenePhase, newPhase: ScenePhase) {
+    private func handleScenePhaseChange(newPhase: ScenePhase) {
         switch newPhase {
         case .active:
-            // App kembali aktif - restore timer state
             pomodoroManager.restoreStateIfNeeded()
-            
         case .background:
-            // App masuk background - save current state
             pomodoroManager.saveStateWhenEnteringBackground()
-            
-        case .inactive:
-            // Transisi state, tidak perlu action khusus
-            break
-            
         @unknown default:
             break
         }
     }
     
-    // MARK: - Notification Permission
-    
-    private func requestNotificationPermission() {
-        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
-            if let error = error {
-                print("Error requesting notification permission: \(error.localizedDescription)")
-            }
-        }
-    }
 }

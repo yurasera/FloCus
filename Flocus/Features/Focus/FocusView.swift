@@ -82,6 +82,7 @@ struct FocusView: View {
                 } else {
                     HStack(spacing: 8){
                         Button("25 min") {
+                            requestNotificationPermission()
                             pomodoroManager.startPomodoro(for: task, duration: 25 * 60)
                             playStartHaptic()
                             playStartSound()
@@ -93,6 +94,7 @@ struct FocusView: View {
                         .glassEffect()
                         
                         Button("5 min") {
+                            requestNotificationPermission()
                             pomodoroManager.startPomodoro(for: task, duration: 5 * 60)
                             playStartHaptic()
                             playStartSound()
@@ -104,6 +106,7 @@ struct FocusView: View {
                         .glassEffect()
                         
                         Button("15 min") {
+                            requestNotificationPermission()
                             pomodoroManager.startPomodoro(for: task, duration: 15 * 60)
                             playStartHaptic()
                             playStartSound()
@@ -277,5 +280,13 @@ struct FocusView: View {
 
     private func playFinishSound() {
         AudioServicesPlaySystemSound(1005)
+    }
+    
+    private func requestNotificationPermission() {
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
+            if let error = error {
+                print("Error requesting notification permission: \(error.localizedDescription)")
+            }
+        }
     }
 }
