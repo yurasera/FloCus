@@ -7,7 +7,6 @@
 
 import SwiftUI
 import SwiftData
-import OSLog
 
 @main
 struct FlocusApp: App {
@@ -15,17 +14,13 @@ struct FlocusApp: App {
     
     @State private var pomodoroManager = PomodoroManager()
     @Environment(\.scenePhase) private var scenePhase
-    private static let logger = Logger(subsystem: "com.yuhayalissera.Flocus", category: "App")
 
     init() {
         do {
-            container = try ModelContainer(for: Category.self, Task.self)
-            try SeedData.seedCategories(in: ModelContext(container))
+            container = try DatabaseManager.makeContainer()
         } catch {
-            Self.logger.critical("Failed to initialize SwiftData container: \(error)")
-            fatalError("Failed to initialize SwiftData container: \(error)") // Keep fatalError for unrecoverable startup failure
+            fatalError("Failed to initialize SwiftData container: \(error)")
         }
-        
     }
 
     var body: some Scene {
@@ -34,7 +29,7 @@ struct FlocusApp: App {
                 .environment(pomodoroManager)
         }
         .modelContainer(container)
-        .onChange(of: scenePhase) { newPhase in
+        .onChange(of: scenePhase) { oldPhase, newPhase in
             handleScenePhaseChange(newPhase: newPhase)
         }
     }
