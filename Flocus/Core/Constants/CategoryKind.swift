@@ -25,7 +25,7 @@ enum CategoryKind {
         switch self {
         case .learn: return Color.brandTertiary
         case .projects: return Color.brandTertiary
-        case .hobbies: return Color.brandSecondary
+        case .hobbies: return Color.brandPrimary
         }
     }
 

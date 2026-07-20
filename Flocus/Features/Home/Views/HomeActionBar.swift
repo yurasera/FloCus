@@ -26,7 +26,7 @@ struct HomeActionBar: View {
             HomeActionButton(
                 title: "Start Focus",
                 systemImage: "timer",
-                foregroundColor: Color.brandSecondary,
+                foregroundColor: Color.brandPrimary,
                 backgroundColor: Color.brandTertiary
             ) {
                 startFocusAction()
