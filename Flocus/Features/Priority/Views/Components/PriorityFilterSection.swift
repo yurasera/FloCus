@@ -73,7 +73,7 @@ struct PriorityFilterSection: View {
                     
                     Picker("Category", selection: $selectedCategory) {
                         ForEach(CategoryFilter.allCases) { category in
-                            Text(category.rawValue).tag(category)
+                            Text(category.rawValue == "Hobbies" ? "Creative" : category.rawValue).tag(category)
                         }
                     }
                     .pickerStyle(.segmented)
