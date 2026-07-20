@@ -27,7 +27,7 @@ struct HomeAddTaskSheet: View {
                         .lineLimit(3, reservesSpace: true)
                 }
             }
-            .navigationTitle("Add \(category.title) Task")
+            .navigationTitle("Add \(category.title == "Hobbies" ? "Creative" : category.title) Task")
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") { dismiss() }
