@@ -14,7 +14,7 @@ struct HomeCategoryHeader: View {
     
     var body: some View {
         HStack {
-            Text(title)
+            Text(title == "Hobbies" ? "Creative" : title)
                 .font(.title)
                 .fontWeight(.bold)
                 .foregroundStyle(color)
